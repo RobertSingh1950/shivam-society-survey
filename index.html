@@ -1,409 +1,298 @@
 <!doctype html>
-<html lang="en">
+<html lang="hi">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>Shivam Properties — Society Facts Collector</title>
+<title>Shivam Properties — Society Details</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: system-ui, -apple-system, sans-serif; background: #0f1115; color: #e8eaf0; padding: 14px 14px 40px; line-height: 1.5; }
-  .wrap { max-width: 860px; margin: 0 auto; }
-  h1 { font-size: 20px; margin-bottom: 6px; }
-  .sub { color: #9aa3b2; font-size: 13.5px; margin-bottom: 16px; }
-  .rules { background: #181c24; border: 1px solid #262c38; border-left: 3px solid #d9a441; border-radius: 10px; padding: 13px 15px; font-size: 13px; color: #9aa3b2; margin-bottom: 18px; }
-  .rules b { color: #e8eaf0; }
-  .rules ul { margin: 8px 0 0 18px; }
-  .rules li { margin-bottom: 5px; }
-  .card { background: #181c24; border: 1px solid #262c38; border-radius: 12px; padding: 16px; margin-bottom: 16px; }
-  .step { font-size: 15px; color: #d9a441; margin-bottom: 12px; font-weight: 700; }
+  body { font-family: system-ui, -apple-system, sans-serif; background: #0f1115; color: #e8eaf0; padding: 14px 14px 110px; line-height: 1.5; }
+  h1 { font-size: 19px; margin-bottom: 6px; }
+  .sub { color: #9aa3b2; font-size: 14px; margin-bottom: 14px; }
+  .sub b { color: #e8eaf0; }
+  .progress { position: sticky; top: 0; z-index: 5; background: #0f1115; padding: 8px 0; font-size: 14px; color: #35d6f4; font-weight: 600; }
+  .warn { background: #181c24; border: 1px solid #262c38; border-left: 3px solid #d9a441; border-radius: 10px; padding: 12px 14px; font-size: 13.5px; color: #9aa3b2; margin-bottom: 16px; }
+  .warn b { color: #e8eaf0; }
   .grid { display: grid; gap: 12px; grid-template-columns: 1fr; }
-  @media (min-width: 620px) { .grid { grid-template-columns: 1fr 1fr; } }
-  label { display: block; font-size: 12.5px; color: #9aa3b2; margin-bottom: 4px; font-weight: 600; }
-  input[type=text], input[type=date], select, textarea {
-    width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #333a48;
-    background: #10141b; color: #e8eaf0; font-size: 15px; font-family: inherit;
-  }
-  textarea { line-height: 1.55; resize: vertical; }
-  fieldset { border: 1px solid #262c38; border-radius: 10px; padding: 12px; margin-top: 14px; }
-  legend { font-size: 12.5px; color: #d9a441; font-weight: 700; padding: 0 6px; }
-  .q { margin-bottom: 16px; }
-  .q:last-child { margin-bottom: 0; }
-  .qtext { font-size: 14px; color: #e8eaf0; font-weight: 600; margin-bottom: 3px; }
-  .qhint { font-size: 12px; color: #6d7688; margin-bottom: 7px; }
+  @media (min-width: 780px) { .grid { grid-template-columns: 1fr 1fr; } }
+  .card { background: #181c24; border: 1px solid #262c38; border-radius: 12px; overflow: hidden; }
+  .card.done { border-color: #2ea86f; }
+  .card.sent { opacity: .55; }
+  .card > summary { list-style: none; cursor: pointer; padding: 13px 14px; display: flex; align-items: center; gap: 9px; }
+  .card > summary::-webkit-details-marker { display: none; }
+  .nm { font-weight: 700; font-size: 15px; flex: 1; }
+  .zone { font-size: 11.5px; color: #6d7688; font-weight: 600; }
+  .tick { color: #2ea86f; display: none; font-size: 15px; }
+  .card.done .tick { display: inline; }
+  .cnt { font-size: 12px; color: #6d7688; font-weight: 700; }
+  .body { padding: 0 14px 14px; }
+  .q { margin-bottom: 14px; }
+  .qtext { font-size: 13.5px; color: #e8eaf0; font-weight: 600; margin-bottom: 2px; }
+  .qhint { font-size: 12px; color: #6d7688; margin-bottom: 6px; }
+  input[type=text], input[type=date] { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #333a48; background: #10141b; color: #e8eaf0; font-size: 15px; font-family: inherit; }
   .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-  .row input[type=text] { flex: 1 1 200px; }
-  .chip { display: inline-flex; align-items: center; gap: 7px; border: 1px solid #333a48; border-radius: 999px;
-          padding: 7px 13px; font-size: 13px; color: #9aa3b2; cursor: pointer; font-weight: 600; white-space: nowrap; }
-  .chip.on { border-color: #d9a441; color: #e8eaf0; }
+  .row input[type=text] { flex: 1 1 180px; }
+  .chip { display: inline-flex; align-items: center; gap: 7px; border: 1px solid #333a48; border-radius: 999px; padding: 7px 12px; font-size: 12.5px; color: #9aa3b2; cursor: pointer; font-weight: 600; white-space: nowrap; }
   .chip input { accent-color: #d9a441; }
-  .dk { border-color: #3a3340; }
+  .chip.on { border-color: #d9a441; color: #e8eaf0; }
   .dk.on { border-color: #b06a6a; color: #e8b3b3; }
-  .actions { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 14px; align-items: center; }
-  .btn { padding: 11px 16px; border: 1px solid #333a48; border-radius: 9px; font-size: 14px; font-weight: 700;
-         cursor: pointer; font-family: inherit; text-decoration: none; display: inline-block; background: #2a3140; color: #e8eaf0; }
-  .btn-gold { background: #d9a441; color: #17130a; border-color: #d9a441; }
-  .btn-wa { background: #25d366; color: #06280f; border-color: #25d366; font-size: 15px; padding: 13px 20px; }
-  .btn-sm { padding: 7px 12px; font-size: 12.5px; }
-  .done { font-size: 12.5px; color: #6d7688; margin-top: 10px; }
-  .done b { color: #7fc98a; }
-  .toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: 22px; background: #d9a441; color: #17130a;
-           padding: 11px 18px; border-radius: 9px; font-weight: 700; font-size: 14px; opacity: 0; pointer-events: none;
-           transition: opacity .25s; z-index: 9; }
-  .toast.show { opacity: 1; }
-  details.help { margin-bottom: 18px; }
-  details.help summary { cursor: pointer; color: #d9a441; font-weight: 700; font-size: 14px; padding: 11px 14px;
-                         background: #181c24; border: 1px solid #262c38; border-radius: 10px; }
-  details.help div { padding: 13px 15px; font-size: 13.5px; color: #9aa3b2; }
-  details.help li { margin: 0 0 7px 18px; }
+  .meta { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+  .bar { position: fixed; left: 0; right: 0; bottom: 0; background: #141922; border-top: 1px solid #262c38; padding: 12px 14px; display: flex; gap: 10px; }
+  .btn { flex: 1; padding: 13px 10px; border: 0; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; text-align: center; text-decoration: none; font-family: inherit; }
+  .btn-wa { background: #25d366; color: #06280f; }
+  .btn-copy { background: #2a3140; color: #e8eaf0; flex: 0 0 92px; }
+  .toast { position: fixed; bottom: 84px; left: 50%; transform: translateX(-50%); background: #2ea86f; color: #04120a; padding: 10px 18px; border-radius: 8px; font-weight: 700; display: none; z-index: 9; }
+  .foot { margin: 24px 0 0; font-size: 12.5px; color: #6d7688; }
+  .foot a { color: #9aa3b2; }
 </style>
 </head>
 <body>
-<div class="wrap">
 
-  <h1>Society Facts Collector</h1>
-  <p class="sub">Shivam Properties &middot; team tool &middot; ye page public nahi hai</p>
+<h1>🏢 Shivam Properties — Society Details</h1>
+<p class="sub">Sanjay ji, har society ke baare mein <b>6 baatein</b> chahiye. Ye baatein kisi
+portal par nahi milti, isliye website par yahi hamari sabse badi taakat hain.
+<b>Saari societies bharni hain</b>, sirf ek do nahi. Ek din mein 2-3 kar lijiye to hafte bhar
+mein poori list ho jayegi. Sab kuch <b>apne aap save hota rehta hai</b>, aadha bhar ke band
+kar doge to bhi save rahega. 👍</p>
 
-  <details class="help">
-    <summary>📖 Ye tool kaise use karna hai (ek baar padh lijiye)</summary>
-    <div>
-      <p>Har society ke baare mein humein 4 cheezein chahiye. Ye 4 cheezein kisi bhi portal
-      par nahi milti, isliye website par ye hamari sabse badi taakat banengi. Buyer inhi 4
-      par phasta hai.</p>
-      <ul>
-        <li>Ek baar mein <b>ek society</b> bhariye. 5 minute ka kaam hai.</li>
-        <li>Jo pata na ho, uspar <b>"pata nahi"</b> daba dijiye. Andaaza <b>mat</b> lagaiye.</li>
-        <li>Agar aap khud society gaye the to <b>"main khud gaya tha"</b> tick kariye. Isse
-        website par "humne khud dekha" likha ja sakta hai, aur wahi sabse zyada bharosa
-        banati hai.</li>
-        <li>Neeche <b>WhatsApp button</b> dabaiye, message bana banaya khul jayega, bas send
-        kar dijiye.</li>
-      </ul>
-      <p><b>Ek zaroori baat:</b> is tool mein kisi client ka naam, number, ya kisi seller ka
-      rate <b>kabhi mat</b> likhiye. Ye sirf buildings ke baare mein hai, logon ke baare mein
-      nahi.</p>
-      <p>"Pata nahi" bharna galti nahi hai. Website par hum likhte hain ki ye cheez humne
-      confirm nahi ki. Galat number likhne se bharosa jaata hai, aur wapas nahi aata.</p>
-    </div>
-  </details>
+<div class="warn">
+  <b>Andaaza kabhi mat lagaiye.</b> Jo confirm nahi hai, uspar seedha <b>"pata nahi"</b> daba
+  dijiye. "Pata nahi" bharna galti nahi hai, hum website par saaf likh dete hain ki ye cheez
+  humne confirm nahi ki. Lekin ek galat number website par gaya to customer ka bharosa jaata
+  hai, aur wo wapas nahi aata.
+  <br><br>
+  📵 Kisi client ka <b>naam, number ya rate</b> yahan kabhi mat likhiye. Ye sirf buildings ke
+  baare mein hai, logon ke baare mein nahi.
+</div>
 
-  <div class="rules">
-    <b>Andaaza kabhi nahi.</b> Jo confirm nahi hai, uspar "pata nahi" daba dijiye. Ek galat
-    number website par gaya to customer ka bharosa jaata hai, aur usko wapas laana mushkil
-    hai. Khali jagah chhodna bilkul theek hai.
-  </div>
+<div class="progress" id="progress"></div>
+<div class="grid" id="grid"></div>
 
-  <div class="card">
-    <div class="step">1. Society chuniye</div>
-    <div class="grid">
-      <div>
-        <label for="society">Society / project</label>
-        <select id="society"></select>
-      </div>
-      <div>
-        <label for="asked-on">Kis din pata kiya</label>
-        <input type="date" id="asked-on">
-      </div>
-    </div>
-    <div class="row" style="margin-top:12px;">
-      <label class="chip" id="visited-chip"><input type="checkbox" id="visited"> Main khud society gaya tha</label>
-      <label class="chip" id="office-chip"><input type="checkbox" id="office"> Society office / guard se pucha</label>
-    </div>
-    <p class="done" id="done-line"></p>
-  </div>
+<p class="foot">Photo wala tool alag hai:
+<a href="https://robertsingh1950.github.io/shivam-photo-review/">photo details</a></p>
 
-  <div class="card" id="questions"></div>
-
-  <div class="card">
-    <div class="step">3. Comparison — customer kis society se compare karta hai</div>
-    <div class="q">
-      <div class="qtext">Jab customer is society ki baat karta hai, to kis doosri society se compare karta hai?</div>
-      <div class="qhint">Jaise: "Essentia dekhun ya MVL Coral?" &middot; 1 se 3 naam likh dijiye, comma se alag</div>
-      <input type="text" id="compare" placeholder="MVL Coral, Terra Heritage">
-    </div>
-    <div class="q">
-      <div class="qtext">Customer sabse zyada kya poochta hai is society ke baare mein?</div>
-      <div class="qhint">Jo sawal baar baar aata hai. Wahi sawal website par pehle jawab dena chahiye.</div>
-      <input type="text" id="common-q" placeholder="paani ki supply, ya loan milta hai ya nahi">
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="step">4. Bhej dijiye</div>
-    <label for="out">Ye message banega (chahe to yahin badal lijiye)</label>
-    <textarea id="out" rows="14" readonly></textarea>
-    <div class="actions">
-      <button type="button" class="btn btn-gold" id="build">Message banao</button>
-      <a class="btn btn-wa" id="send" href="#">WhatsApp par bhejo</a>
-      <button type="button" class="btn btn-sm" id="copy">Copy</button>
-      <button type="button" class="btn btn-sm" id="reset">Is society ko dobara bharo</button>
-    </div>
-  </div>
-
+<div class="bar">
+  <button type="button" class="btn btn-copy" id="saveBtn">💾 Save</button>
+  <button type="button" class="btn btn-copy" id="copyBtn">📋 Copy</button>
+  <a class="btn btn-wa" id="sendBtn" href="#">✅ Submit — WhatsApp pe bhejo</a>
 </div>
 <div class="toast" id="toast"></div>
 
 <script>
-// Where the filled survey goes. This is the business WhatsApp number, taken from
-// src/config.ts (NAP_WHATSAPP) in the website repo. If it ever changes there, change it
-// here too: this file has no connection to that repo and will not follow it.
-var SEND_TO = '919050093000';
+// Owner's WhatsApp. Same number the photo tool sends to, so everything lands in one place.
+var VIKAS_WA = '918570009071';
 
-// Societies we hold data on, taken from src/data/projects.json in the website repo.
-// "kind" changes which questions appear: a plotted township has no lift, no club house and
-// often no RWA, and asking those questions makes the tool look like it does not know the
-// local market. Keep this list in step with projects.json when a project is added there.
+// Societies we hold data on. Names and zone hints follow the photo tool's list, because
+// that is the vocabulary Sanjay ji already recognises, plus the three from the website's
+// projects.json that the photo tool was missing.
+// "kind" changes the last two questions: a plotted township has no lift and no club house,
+// and asking about them makes the tool look like it does not know the local market.
 var SOCIETIES = [
-  { name: 'MVL Coral', kind: 'flat' },
-  { name: 'HFL Presidency Estate', kind: 'flat' },
-  { name: 'Cosmos', kind: 'flat' },
-  { name: 'Essentia', kind: 'flat' },
-  { name: 'Terra Elegance', kind: 'flat' },
-  { name: 'Terra Heritage', kind: 'flat' },
-  { name: 'Terra Castle', kind: 'flat' },
-  { name: 'Omaxe Green Meadow City', kind: 'plot' },
-  { name: 'Omaxe Panorama City', kind: 'plot' },
-  { name: 'VBHC', kind: 'plot' },
-  { name: 'Krish Season', kind: 'plot' },
-  { name: 'Ekta Enclave', kind: 'plot' },
-  { name: 'Aqasia Homes', kind: 'plot' },
-  { name: 'Terra City', kind: 'plot' },
-  { name: 'Lifestyle City', kind: 'plot' },
-  { name: 'Chanderlok City', kind: 'plot' },
-  { name: 'MGH Anandam', kind: 'plot' },
-  { name: 'AMD City', kind: 'plot' },
-  { name: 'Tulip City', kind: 'plot' },
-  { name: 'Dwarkadish', kind: 'plot' },
-  { name: 'Reverence (Ashadeep)', kind: 'plot' },
-  { name: 'Koi aur society', kind: 'flat' }
+  { n: 'MVL Coral', k: 'flat' },
+  { n: 'HFL Presidency Estate', k: 'flat' },
+  { n: 'Cosmos', k: 'flat' },
+  { n: 'Essentia', k: 'flat' },
+  { n: 'Terra Elegance', k: 'flat' },
+  { n: 'Terra Heritage', k: 'flat' },
+  { n: 'Terra Castle', k: 'flat' },
+  { n: 'Omaxe Medocity', k: 'plot' },
+  { n: 'Omaxe Green Meadow City', k: 'plot' },
+  { n: 'Omaxe Panorama City', k: 'plot' },
+  { n: 'VBHC', k: 'plot', z: 'Honda zone' },
+  { n: 'Krish Season', k: 'plot', z: 'Honda zone' },
+  { n: 'Ekta Enclave', k: 'plot' },
+  { n: 'Aqasia Homes', k: 'plot' },
+  { n: 'Terra City', k: 'plot' },
+  { n: 'Lifestyle City', k: 'plot' },
+  { n: 'Chanderlok City', k: 'plot' },
+  { n: 'Reverence (Ashadeep)', k: 'plot' },
+  { n: 'MGH Anandam', k: 'plot', z: 'Dharuhera' },
+  { n: 'AMD City', k: 'plot', z: 'Dharuhera' },
+  { n: 'Tulip City', k: 'plot', z: 'Dharuhera' },
+  { n: 'Dwarkadish', k: 'plot', z: 'Dharuhera' }
 ];
 
-// The four questions that no portal answers. Order matters: money first, because it is the
-// one the person at the society office answers without hesitating, and it warms up the rest.
+// The four facts no portal carries. Money first: it is the one the society office answers
+// without hesitating, and it warms up the rest.
 var COMMON = [
-  { id: 'maint', q: 'Maintenance kitna hai, aur kaun leta hai?',
-    hint: 'Per sq ft ya poore flat ka. Aur builder leta hai, RWA leta hai, ya koi nahi leta.',
-    ph: '2 rupaye per sq ft, RWA leti hai' },
-  { id: 'rwa', q: 'RWA bani hai ya nahi?',
-    hint: 'Registered RWA hai, ya sirf informal committee hai, ya kuch bhi nahi.',
-    ph: 'RWA registered hai, 2019 se' },
-  { id: 'noc', q: 'Transfer / NOC mein kitna time aur kitna paisa lagta hai?',
-    hint: 'Society NOC kitne din mein milta hai, charge kitna hai, aur koi shart hai kya.',
-    ph: '15 din, 25000 charge, dues clear hone chahiye' },
-  { id: 'loan', q: 'Kaun se bank yahan loan dete hain?',
-    hint: 'Jo naam yaad ho likh dijiye. Agar koi bank mana karta hai to wo bhi likhiye, wo aur zyada kaam ki baat hai.',
-    ph: 'SBI aur HDFC dete hain, ek bank mana karta hai' }
+  { id: 'maint', q: 'Maintenance kitna, aur kaun leta hai?', h: 'Per sq ft ya poore flat ka. Builder leta hai, RWA leti hai, ya koi nahi.', p: '2 rs per sq ft, RWA leti hai' },
+  { id: 'rwa', q: 'RWA bani hai ya nahi?', h: 'Registered RWA hai, ya sirf informal committee, ya kuch bhi nahi.', p: 'registered hai, 2019 se' },
+  { id: 'noc', q: 'Transfer / NOC mein kitna time aur paisa?', h: 'NOC kitne din mein, charge kitna, koi shart hai kya.', p: '15 din, 25000, dues clear hone chahiye' },
+  { id: 'loan', q: 'Kaun se bank yahan loan dete hain?', h: 'Jo naam yaad ho. Koi bank mana karta ho to wo aur zyada kaam ki baat hai.', p: 'SBI aur HDFC, ek bank mana karta hai' }
 ];
-
 var FLAT_ONLY = [
-  { id: 'services', q: 'Paani, bijli backup aur lift kaisa chal raha hai?',
-    hint: 'Paani kitne ghante aata hai, power backup sach mein chalta hai ya nahi, lift theek hai ya nahi.',
-    ph: 'paani subah shaam, backup chalta hai, ek lift band thi' },
-  { id: 'club', q: 'Club house / pool / park khula hai ya band?',
-    hint: 'Brochure mein sab hota hai. Sach mein kya chal raha hai, wahi likhiye.',
-    ph: 'club house khula hai, pool band pada hai' }
+  { id: 'services', q: 'Paani, bijli backup aur lift ka kya haal hai?', h: 'Paani kitne ghante, backup sach mein chalta hai ya nahi, lift theek hai ya nahi.', p: 'paani subah shaam, backup chalta hai, ek lift band' },
+  { id: 'club', q: 'Club house / pool / park khula hai ya band?', h: 'Brochure mein sab hota hai. Sach mein kya chal raha hai wahi likhiye.', p: 'club khula hai, pool band pada hai' }
 ];
-
 var PLOT_ONLY = [
-  { id: 'services', q: 'Andar ki sadak, paani aur bijli ka kya haal hai?',
-    hint: 'Sadak bani hai ya nahi, paani ka connection hai ya boring, bijli ka meter lagta hai ya nahi.',
-    ph: 'sadak bani hai, paani boring se, meter lag jaata hai' },
-  { id: 'handover', q: 'Township authority (BIDA / UIT) ko handover hui hai ya builder ke paas hai?',
-    hint: 'Isse pata chalta hai ki aage maintenance kaun karega. Buyer ke liye badi baat hai.',
-    ph: 'abhi builder ke paas hai' }
+  { id: 'services', q: 'Andar ki sadak, paani aur bijli ka kya haal hai?', h: 'Sadak bani hai ya nahi, paani boring se ya connection, bijli ka meter lagta hai ya nahi.', p: 'sadak bani hai, paani boring se, meter lag jaata hai' },
+  { id: 'handover', q: 'Authority (BIDA / UIT) ko handover hui ya builder ke paas hai?', h: 'Isse pata chalta hai aage maintenance kaun karega. Buyer ke liye badi baat hai.', p: 'abhi builder ke paas hai' }
 ];
 
-var $ = function (id) { return document.getElementById(id); };
-var MEM_KEY = 'shivam_society_survey_v1';
-var MEM = {};
-try { MEM = JSON.parse(localStorage.getItem(MEM_KEY) || '{}'); } catch (e) { MEM = {}; }
-function saveMem() { try { localStorage.setItem(MEM_KEY, JSON.stringify(MEM)); } catch (e) {} }
+var KEY = 'shivam-society-facts-v2';
+var state = {};
+try { state = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) { state = {}; }
+var grid = document.getElementById('grid');
 
-function toast(msg) {
-  var t = $('toast'); t.textContent = msg; t.className = 'toast show';
-  setTimeout(function () { t.className = 'toast'; }, 2000);
-}
+function qs(kind) { return COMMON.concat(kind === 'plot' ? PLOT_ONLY : FLAT_ONLY); }
+function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;'); }
 
-function currentKind() {
-  var s = SOCIETIES.filter(function (x) { return x.name === $('society').value; })[0];
-  return s ? s.kind : 'flat';
-}
-
-function questionSet() {
-  var extra = currentKind() === 'plot' ? PLOT_ONLY : FLAT_ONLY;
-  return COMMON.concat(extra);
-}
-
-// Every question gets a "pata nahi" toggle sitting next to the text box, and the toggle is a
-// real recorded answer rather than an empty field. An unanswered question and a question
-// answered "we do not know" are different things: the first is a gap in the survey, the
-// second is a fact about what we can honestly publish. The website prints the second under
-// "what we could not verify", which is a section that does the business good.
-function renderQuestions() {
-  var wrap = $('questions');
-  wrap.innerHTML = '<div class="step">2. Chaar zaroori sawal</div>';
-  questionSet().forEach(function (q, i) {
-    var d = document.createElement('div');
-    d.className = 'q';
-    d.innerHTML =
-      '<div class="qtext">' + (i + 1) + '. ' + q.q + '</div>' +
-      '<div class="qhint">' + q.hint + '</div>' +
+SOCIETIES.forEach(function (soc) {
+  var s = state[soc.n] || {};
+  var card = document.createElement('details');
+  card.className = 'card';
+  var qhtml = qs(soc.k).map(function (q) {
+    var v = (s.a && s.a[q.id]) || '';
+    var dk = v === '__DK__';
+    return '<div class="q">' +
+      '<div class="qtext">' + q.q + '</div>' +
+      '<div class="qhint">' + q.h + '</div>' +
       '<div class="row">' +
-        '<input type="text" id="a-' + q.id + '" placeholder="' + q.ph + '">' +
-        '<label class="chip dk" id="dk-chip-' + q.id + '"><input type="checkbox" id="dk-' + q.id + '"> pata nahi</label>' +
-      '</div>';
-    wrap.appendChild(d);
-  });
-  questionSet().forEach(function (q) {
-    var dk = $('dk-' + q.id);
-    dk.addEventListener('change', function () {
-      $('dk-chip-' + q.id).className = 'chip dk' + (dk.checked ? ' on' : '');
-      $('a-' + q.id).disabled = dk.checked;
-      if (dk.checked) $('a-' + q.id).value = '';
-    });
-  });
-  restore();
+        '<input type="text" data-soc="' + esc(soc.n) + '" data-q="' + q.id + '" placeholder="' + esc(q.p) + '" value="' + (dk ? '' : esc(v)) + '"' + (dk ? ' disabled' : '') + '>' +
+        '<label class="chip dk' + (dk ? ' on' : '') + '"><input type="checkbox" data-soc="' + esc(soc.n) + '" data-dk="' + q.id + '"' + (dk ? ' checked' : '') + '> pata nahi</label>' +
+      '</div></div>';
+  }).join('');
+  card.innerHTML =
+    '<summary>' +
+      '<span class="nm">' + esc(soc.n) + (soc.z ? ' <span class="zone">' + esc(soc.z) + '</span>' : '') + '</span>' +
+      '<span class="cnt"></span><span class="tick">✅</span>' +
+    '</summary>' +
+    '<div class="body">' +
+      '<div class="meta">' +
+        '<label class="chip"><input type="checkbox" data-soc="' + esc(soc.n) + '" data-meta="visited"' + (s.visited ? ' checked' : '') + '> main khud gaya tha</label>' +
+        '<label class="chip"><input type="checkbox" data-soc="' + esc(soc.n) + '" data-meta="office"' + (s.office ? ' checked' : '') + '> office / guard se pucha</label>' +
+      '</div>' +
+      qhtml +
+      '<div class="q"><div class="qtext">Customer is society ko kis se compare karta hai?</div>' +
+      '<div class="qhint">Jaise: "Essentia dekhun ya MVL Coral?" 1 se 3 naam, comma se alag.</div>' +
+      '<input type="text" data-soc="' + esc(soc.n) + '" data-q="__cmp" placeholder="MVL Coral, Terra Heritage" value="' + esc((s.a && s.a.__cmp) || '') + '"></div>' +
+    '</div>';
+  grid.appendChild(card);
+});
+
+// A society counts as done only when every question has a real answer OR an explicit
+// "pata nahi". Half-filled does not count, because the point of the progress bar is to
+// drive the list to completion rather than to reward a good start.
+function isDone(soc) {
+  var s = state[soc.n] || {}; var a = s.a || {};
+  return qs(soc.k).every(function (q) { return (a[q.id] || '').trim() !== ''; });
 }
 
-function formKey() { return $('society').value; }
-
-function collect() {
-  var o = { society: $('society').value, askedOn: $('asked-on').value,
-            visited: $('visited').checked, office: $('office').checked,
-            compare: $('compare').value.trim(), commonQ: $('common-q').value.trim(), answers: {} };
-  questionSet().forEach(function (q) {
-    o.answers[q.id] = $('dk-' + q.id).checked ? '__DK__' : $('a-' + q.id).value.trim();
+function refresh() {
+  var done = 0, unsent = 0;
+  document.querySelectorAll('.card').forEach(function (card, i) {
+    var soc = SOCIETIES[i];
+    var s = state[soc.n] || {}; var a = s.a || {};
+    var d = isDone(soc);
+    card.classList.toggle('done', d);
+    card.classList.toggle('sent', !!s.sent);
+    var filled = qs(soc.k).filter(function (q) { return (a[q.id] || '').trim() !== ''; }).length;
+    card.querySelector('.cnt').textContent = s.sent ? 'bhej diya' : filled + '/' + qs(soc.k).length;
+    if (d) { done++; if (!s.sent) unsent++; }
+    qs(soc.k).forEach(function (q) {
+      var box = card.querySelector('[data-dk="' + q.id + '"]');
+      if (!box) return;
+      var txt = card.querySelector('[data-q="' + q.id + '"]');
+      var on = (a[q.id] === '__DK__');
+      box.parentNode.className = 'chip dk' + (on ? ' on' : '');
+      if (txt) { txt.disabled = on; if (on) txt.value = ''; }
+    });
+    card.querySelectorAll('[data-meta]').forEach(function (b) {
+      b.parentNode.className = 'chip' + (b.checked ? ' on' : '');
+    });
   });
-  return o;
+  document.getElementById('progress').textContent =
+    done + ' / ' + SOCIETIES.length + ' society done' + (unsent ? '  ·  ' + unsent + ' bhejni baaki hai' : '');
+  return unsent;
 }
 
-function restore() {
-  var d = MEM[formKey()];
-  if (!d) {
-    questionSet().forEach(function (q) {
-      $('a-' + q.id).value = ''; $('a-' + q.id).disabled = false;
-      $('dk-' + q.id).checked = false; $('dk-chip-' + q.id).className = 'chip dk';
-    });
-    $('compare').value = ''; $('common-q').value = '';
-    $('visited').checked = false; $('office').checked = false;
-    syncChips(); showDone(); return;
+function put(soc, fn) {
+  state[soc] = state[soc] || { a: {} };
+  state[soc].a = state[soc].a || {};
+  fn(state[soc]);
+  localStorage.setItem(KEY, JSON.stringify(state));
+}
+
+document.addEventListener('input', function (e) {
+  var el = e.target;
+  if (!el.dataset || !el.dataset.soc || !el.dataset.q) return;
+  put(el.dataset.soc, function (s) { s.a[el.dataset.q] = el.value; s.sent = false; });
+  refresh();
+});
+
+document.addEventListener('change', function (e) {
+  var el = e.target;
+  if (!el.dataset || !el.dataset.soc) return;
+  if (el.dataset.dk) {
+    put(el.dataset.soc, function (s) { s.a[el.dataset.dk] = el.checked ? '__DK__' : ''; s.sent = false; });
+    refresh();
+  } else if (el.dataset.meta) {
+    put(el.dataset.soc, function (s) { s[el.dataset.meta] = el.checked; s.sent = false; });
+    refresh();
   }
-  questionSet().forEach(function (q) {
-    var v = d.answers ? d.answers[q.id] : '';
-    if (v === '__DK__') {
-      $('dk-' + q.id).checked = true; $('dk-chip-' + q.id).className = 'chip dk on';
-      $('a-' + q.id).value = ''; $('a-' + q.id).disabled = true;
-    } else {
-      $('dk-' + q.id).checked = false; $('dk-chip-' + q.id).className = 'chip dk';
-      $('a-' + q.id).value = v || ''; $('a-' + q.id).disabled = false;
-    }
+});
+
+// Only completed, not-yet-sent societies go out, and they are marked sent afterwards. A
+// single message carrying all 22 societies would run past what a wa.me link can carry and
+// WhatsApp would silently truncate it, which is the worst possible failure: it looks sent.
+function pending() {
+  return SOCIETIES.filter(function (soc) {
+    return isDone(soc) && !(state[soc.n] || {}).sent;
   });
-  $('compare').value = d.compare || '';
-  $('common-q').value = d.commonQ || '';
-  $('visited').checked = !!d.visited;
-  $('office').checked = !!d.office;
-  if (d.askedOn) $('asked-on').value = d.askedOn;
-  syncChips(); showDone();
 }
 
-function syncChips() {
-  $('visited-chip').className = 'chip' + ($('visited').checked ? ' on' : '');
-  $('office-chip').className = 'chip' + ($('office').checked ? ' on' : '');
-}
-
-function showDone() {
-  var names = Object.keys(MEM);
-  $('done-line').innerHTML = names.length
-    ? 'Ab tak bhari gayi societies: <b>' + names.length + '</b> &middot; ' + names.join(', ')
-    : 'Abhi tak koi society nahi bhari.';
-}
-
-function fmtDate(iso) {
-  if (!iso) return '';
-  var p = iso.split('-');
-  return p[2] + '-' + p[1] + '-' + p[0];
-}
-
-// The message is built as plain labelled lines rather than prose, because it gets typed
-// straight into society-intake.csv at the other end. "PATA NAHI" is written in capitals on
-// purpose: it must be impossible to mistake for a blank that nobody asked about.
-function buildMsg() {
-  var d = collect();
-  if (!d.society) { toast('Pehle society chuniye'); return ''; }
-  var L = [];
-  L.push('*SOCIETY FACTS — ' + d.society + '*');
-  if (d.askedOn) L.push('Date: ' + fmtDate(d.askedOn));
-  var how = [];
-  if (d.visited) how.push('main khud gaya tha');
-  if (d.office) how.push('society office / guard se pucha');
-  L.push('Kaise pata kiya: ' + (how.length ? how.join(' + ') : 'nahi bataya'));
-  L.push('');
-  questionSet().forEach(function (q, i) {
-    var v = d.answers[q.id];
-    L.push((i + 1) + ') ' + q.q);
-    L.push('   ' + (v === '__DK__' ? 'PATA NAHI' : (v || 'PATA NAHI')));
+function buildMessage(list) {
+  var L = ['*SOCIETY DETAILS — Shivam Properties*', ''];
+  list.forEach(function (soc) {
+    var s = state[soc.n] || {}; var a = s.a || {};
+    var how = [];
+    if (s.visited) how.push('khud gaya tha');
+    if (s.office) how.push('office/guard se pucha');
+    L.push('*' + soc.n + '*' + (soc.z ? ' (' + soc.z + ')' : ''));
+    if (how.length) L.push('_' + how.join(' + ') + '_');
+    qs(soc.k).forEach(function (q) {
+      var v = (a[q.id] || '').trim();
+      L.push('• ' + q.q + ' ' + (v === '__DK__' || !v ? 'PATA NAHI' : v));
+    });
+    if ((a.__cmp || '').trim()) L.push('• Compare: ' + a.__cmp.trim());
+    L.push('');
   });
-  L.push('');
-  L.push('Compare kis se hota hai: ' + (d.compare || 'PATA NAHI'));
-  L.push('Customer sabse zyada poochta hai: ' + (d.commonQ || 'PATA NAHI'));
-  MEM[d.society] = d;
-  saveMem();
-  showDone();
+  if (list.length === 0) L.push('(abhi koi society puri nahi bhari)');
   return L.join('\n');
 }
 
-function init() {
-  var sel = $('society');
-  // Placeholder first, with an empty value, so the "pehle society chuniye" guard in
-  // buildMsg() can actually fire. Without it the first society is silently preselected and
-  // a survey can be submitted against the wrong building.
-  var ph = document.createElement('option');
-  ph.value = ''; ph.textContent = '-- society chuniye --';
-  sel.appendChild(ph);
-  SOCIETIES.forEach(function (s) {
-    var o = document.createElement('option');
-    o.value = s.name; o.textContent = s.name;
-    sel.appendChild(o);
-  });
-  sel.value = '';
-  var today = new Date();
-  $('asked-on').value = today.getFullYear() + '-' +
-    String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
-
-  renderQuestions();
-  sel.addEventListener('change', renderQuestions);
-  $('visited').addEventListener('change', syncChips);
-  $('office').addEventListener('change', syncChips);
-
-  $('build').addEventListener('click', function () {
-    var m = buildMsg();
-    if (m) { $('out').value = m; $('out').removeAttribute('readonly'); toast('Message ban gaya'); }
-  });
-  $('send').addEventListener('click', function (e) {
-    e.preventDefault();
-    var m = $('out').value || buildMsg();
-    if (!m) return;
-    $('out').value = m;
-    window.open('https://wa.me/' + SEND_TO + '?text=' + encodeURIComponent(m), '_blank');
-  });
-  $('copy').addEventListener('click', function () {
-    var m = $('out').value || buildMsg();
-    if (!m) return;
-    $('out').value = m;
-    $('out').removeAttribute('readonly');
-    $('out').select();
-    try { document.execCommand('copy'); toast('Copy ho gaya'); } catch (e) { toast('Copy nahi hua, haath se copy kariye'); }
-  });
-  $('reset').addEventListener('click', function () {
-    var k = formKey();
-    if (!k) return;
-    delete MEM[k]; saveMem(); restore(); $('out').value = '';
-    toast(k + ' saaf ho gayi');
-  });
-
-  showDone();
+function toast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg; t.style.display = 'block';
+  setTimeout(function () { t.style.display = 'none'; }, 2200);
 }
-init();
+
+document.getElementById('sendBtn').addEventListener('click', function (e) {
+  e.preventDefault();
+  var list = pending();
+  if (!list.length) { toast('Koi nayi puri society nahi hai'); return; }
+  var msg = buildMessage(list);
+  list.forEach(function (soc) { put(soc.n, function (s) { s.sent = true; }); });
+  refresh();
+  window.open('https://wa.me/' + VIKAS_WA + '?text=' + encodeURIComponent(msg), '_blank');
+});
+
+document.getElementById('saveBtn').addEventListener('click', function () {
+  localStorage.setItem(KEY, JSON.stringify(state));
+  toast('Save ho gaya ✅ Baad me wapas aake aage bhar sakte ho');
+});
+
+document.getElementById('copyBtn').addEventListener('click', function () {
+  var list = pending();
+  var msg = buildMessage(list.length ? list : SOCIETIES.filter(isDone));
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(msg).then(function () { toast('Copy ho gaya ✅'); },
+      function () { toast('Copy nahi hua'); });
+  } else { toast('Copy nahi hua'); }
+});
+
+refresh();
 </script>
 </body>
 </html>

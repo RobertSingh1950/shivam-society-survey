@@ -25,15 +25,30 @@ Aur ek aur cheez jo bahut kaam ki hai:
 "Essentia dekhun ya MVL Coral?" Jo jodi baar baar aati hai, wahi humein website par likhni
 chahiye.
 
-*Kaise use karna hai (5 minute ka kaam hai, ek society ka):*
-1️⃣ Link kholiye, upar se *society chuniye*
+*Photo wale tool jaisa hi hai* — usi tarah kaam karta hai jo aap already use karte ho. Saari
+societies ek hi page par card ki tarah dikhengi, upar counter chalta rahega
+*"5 / 22 society done"*, aur neeche green Submit button hai. 📸 wale tool jaisa hi.
+
+*Kaise use karna hai:*
+1️⃣ Link kholiye. Saari societies ki list dikhegi. Jis par kaam karna hai uspar *tap kariye*,
+wo khul jayegi
 2️⃣ Agar aap khud gaye the to *"main khud gaya tha"* tick kar dijiye. Ye zaroori hai — isse
 website par "humne khud dekha" likha ja sakta hai, aur wahi line customer ko sabse zyada
 bharosa deti hai
-3️⃣ 6 sawaal aayenge, jo pata hai wo bhar dijiye
+3️⃣ 6 sawaal hain, jo pata hai wo bhar dijiye
 4️⃣ Jo pata nahi hai, uspar *"pata nahi"* daba dijiye
-5️⃣ Neeche *"Message banao"* dabaiye, phir *green WhatsApp button*. Message bana banaya khul
-jayega, bas send kar dijiye
+5️⃣ Jab society *poori* bhar jayegi, card *green* ho jayega aur ✅ lag jayega
+6️⃣ 2-3 societies ho jayen to neeche *green Submit button* dabaiye. Message seedha mere
+WhatsApp par aa jayega
+
+*Poori list karni hai, sirf 1-2 nahi* ⚠️
+Upar wala counter *22 / 22* hona chahiye. Jo society aap jaante ho, sab bhar dijiye. Ek din
+mein 2-3 kar lijiye to hafte bhar mein poori list ho jayegi. Jo society aap nahi jaante,
+uske 6 sawaalon par *"pata nahi"* daba dijiye — wo bhi jawab hai, aur wo bhi kaam ka hai.
+
+*Aadha bhara card count nahi hota* — jab tak saare 6 sawaal ka jawab (ya "pata nahi") nahi
+hoga, card green nahi hoga. Ye jaanbujh kar rakha hai, taki koi society aadhi bhari na reh
+jaye.
 
 *Sabse zaroori niyam* 🚫
 *Andaaza kabhi mat lagaiye.* Jo confirm nahi hai, uspar seedha "pata nahi" daba dijiye.
@@ -50,9 +65,13 @@ baare mein hai, logon ke baare mein nahi.
 thode alag aayenge — sadak, paani, bijli, aur BIDA/UIT ko handover hui ya nahi. Ye apne aap
 badal jaate hain, aapko kuch nahi karna.
 
-*Kitni societies bharni hain?*
-Jitni aap jaante hain. Ek din mein 2-3 kar lijiye to hafte bhar mein poori list ho jayegi.
-Tool khud yaad rakhta hai ki kaun kaun si ho chuki hai, neeche list dikhati hai.
+*Submit baar baar daba sakte ho* 🔁
+Har baar sirf *nayi puri hui* societies jaati hain, purani dobara nahi jaati. Isliye 2-3
+bhar ke Submit dabao, phir agle din aur 2-3. Ek saath saari bhejne ki koshish mat kariye,
+WhatsApp lamba message kaat deta hai.
+
+Agar kisi society ka jawab baad mein badalna ho, to badal dijiye aur dobara Submit daba
+dijiye — wo apne aap phir se bhej di jayegi.
 
 Koi doubt ho to tool ke andar sabse upar *"Ye tool kaise use karna hai"* box hai, usme poori
 detail hai. Phir bhi na samajh aaye to mujhe message kar dijiye 👍

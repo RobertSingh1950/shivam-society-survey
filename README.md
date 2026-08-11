@@ -25,15 +25,21 @@ only part of the site a competitor cannot copy. This tool is how they get collec
 
 ## What it does
 
-- One society at a time, picked from the list we already hold in `src/data/projects.json`
+Built on the same pattern as `shivam-photo-review`, deliberately: all items on one page,
+sticky progress counter, autosave on every keystroke, and one Submit in a fixed bottom bar.
+Sanjay ji already knows how that tool behaves, so this one behaves the same way.
+
+- **All 22 societies on one page**, each a collapsible card. The progress bar reads
+  `X / 22 society done`, so the job is visibly a list to finish rather than a form to fill
+  once.
 - Question set changes by property kind: a plotted township gets asked about internal roads,
   water, electricity and whether BIDA or UIT has taken handover, instead of lifts and the
   club house
 - Every question has a **"pata nahi"** toggle, which is recorded as a real answer
 - Records whether the person went to the site themselves, which is what lets the website say
   "we saw this ourselves" and sets the evidence tier
-- Saves progress in the browser, so a half-filled society survives closing the tab
-- Builds a labelled WhatsApp message and opens it, ready to send
+- Autosaves to the browser, so a half-filled page survives closing the tab
+- Submit sends to the owner's WhatsApp, the same number the photo tool uses
 
 ## The design decisions that matter
 
@@ -50,8 +56,15 @@ mistake for a blank line at the filing end.
 about people. The in-app guide says so explicitly. Anything about a seller belongs in
 private records, never in a survey that gets pasted into a repository.
 
-**The date is asked for, not assumed.** A fact collected in March and filed in August is a
-March fact. The website prints the date beside the finding.
+**A society counts as done only when every question is answered or explicitly marked "pata
+nahi".** Half-filled does not tick the card. The progress bar exists to drive the list to
+completion, not to reward a good start, and the owner's instruction was that all societies
+get covered rather than one or two.
+
+**Submit sends only the completed, not-yet-sent societies, then marks them sent.** All 22
+societies in a single message would run past what a `wa.me` link can carry, and WhatsApp
+truncates silently, which is the worst failure available here because it still looks sent.
+Editing an answer clears the sent flag so the correction goes out on the next Submit.
 
 ## Filing the replies
 
@@ -69,7 +82,12 @@ per dimension. Evidence tier follows what the message says about how it was foun
 - **Society list** lives in the `SOCIETIES` array in `index.html`. Keep it in step with
   `src/data/projects.json` in the website repo when a project is added there. Nothing links
   the two files automatically.
-- **WhatsApp number** is the `SEND_TO` constant, copied from `NAP_WHATSAPP` in the website's
-  `src/config.ts`. If it changes there, change it here too. It will not follow.
+- **WhatsApp number** is the `VIKAS_WA` constant, the same owner number `shivam-photo-review`
+  sends to, so every field reply lands in one thread. It is deliberately NOT the public
+  business number from the website's `src/config.ts`: this is internal data going to the
+  owner, not an enquiry going to the sales line.
+- **Open question for the owner:** the list carries both `Omaxe Medocity` (from the photo
+  tool) and `Omaxe Green Meadow City` (from `projects.json`). These may be the same township
+  under two names. Confirm and drop one.
 - The page is `noindex, nofollow`. It is a staff tool and must never be linked from
   propertydealersinbhiwadi.com.
