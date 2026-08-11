@@ -130,19 +130,29 @@ var PLOT_ONLY = [
   { id: 'handover', q: 'Authority (BIDA / UIT) ko handover hui ya builder ke paas hai?', h: 'Isse pata chalta hai aage maintenance kaun karega. Buyer ke liye badi baat hai.', p: 'abhi builder ke paas hai' }
 ];
 
+// Dharuhera is Haryana, so BIDA and UIT have no jurisdiction there at all: the licensing
+// route is DTCP Haryana, usually under the DDJAY scheme. Sanjay ji answered the BIDA
+// question with "DDJAY" for MGH Anandam on 11 August 2026, which is him correcting the
+// question rather than answering it. Ask the right one.
+var HARYANA_HANDOVER = { id: 'handover', q: 'DTCP Haryana licence / DDJAY hai, ya HSVP ko handover ho chuka?', h: 'Dharuhera Haryana mein hai, yahan BIDA ya UIT nahi chalta. Licence number pata ho to likh dijiye.', p: 'DDJAY colony hai, licence builder ke paas' };
+
 var KEY = 'shivam-society-facts-v2';
 var state = {};
 try { state = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) { state = {}; }
 var grid = document.getElementById('grid');
 
-function qs(kind) { return COMMON.concat(kind === 'plot' ? PLOT_ONLY : FLAT_ONLY); }
+function qs(soc) {
+  if (soc.k !== 'plot') return COMMON.concat(FLAT_ONLY);
+  var tail = soc.z === 'Dharuhera' ? [PLOT_ONLY[0], HARYANA_HANDOVER] : PLOT_ONLY;
+  return COMMON.concat(tail);
+}
 function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;'); }
 
 SOCIETIES.forEach(function (soc) {
   var s = state[soc.n] || {};
   var card = document.createElement('details');
   card.className = 'card';
-  var qhtml = qs(soc.k).map(function (q) {
+  var qhtml = qs(soc).map(function (q) {
     var v = (s.a && s.a[q.id]) || '';
     var dk = v === '__DK__';
     return '<div class="q">' +
@@ -176,7 +186,7 @@ SOCIETIES.forEach(function (soc) {
 // drive the list to completion rather than to reward a good start.
 function isDone(soc) {
   var s = state[soc.n] || {}; var a = s.a || {};
-  return qs(soc.k).every(function (q) { return (a[q.id] || '').trim() !== ''; });
+  return qs(soc).every(function (q) { return (a[q.id] || '').trim() !== ''; });
 }
 
 function refresh() {
@@ -187,10 +197,10 @@ function refresh() {
     var d = isDone(soc);
     card.classList.toggle('done', d);
     card.classList.toggle('sent', !!s.sent);
-    var filled = qs(soc.k).filter(function (q) { return (a[q.id] || '').trim() !== ''; }).length;
-    card.querySelector('.cnt').textContent = s.sent ? 'bhej diya' : filled + '/' + qs(soc.k).length;
+    var filled = qs(soc).filter(function (q) { return (a[q.id] || '').trim() !== ''; }).length;
+    card.querySelector('.cnt').textContent = s.sent ? 'bhej diya' : filled + '/' + qs(soc).length;
     if (d) { done++; if (!s.sent) unsent++; }
-    qs(soc.k).forEach(function (q) {
+    qs(soc).forEach(function (q) {
       var box = card.querySelector('[data-dk="' + q.id + '"]');
       if (!box) return;
       var txt = card.querySelector('[data-q="' + q.id + '"]');
@@ -242,6 +252,23 @@ function pending() {
   });
 }
 
+// Hard cap on one message. Learned the expensive way on 11 August 2026: Sanjay ji filled
+// 19 societies, pressed Submit once, and WhatsApp silently truncated the link mid-sentence
+// at society 19. Three societies never arrived and nothing warned anybody, because a
+// truncated message still looks sent. Capping resends was not enough; the batch itself has
+// to be capped. ~1800 chars leaves generous headroom under the practical wa.me limit.
+var MAX_CHARS = 1800;
+
+function nextBatch() {
+  var all = pending(), batch = [];
+  for (var i = 0; i < all.length; i++) {
+    var trial = batch.concat([all[i]]);
+    if (batch.length && buildMessage(trial).length > MAX_CHARS) break;
+    batch = trial;
+  }
+  return { batch: batch, left: all.length - batch.length };
+}
+
 function buildMessage(list) {
   var L = ['*SOCIETY DETAILS — Shivam Properties*', ''];
   list.forEach(function (soc) {
@@ -251,7 +278,7 @@ function buildMessage(list) {
     if (s.office) how.push('office/guard se pucha');
     L.push('*' + soc.n + '*' + (soc.z ? ' (' + soc.z + ')' : ''));
     if (how.length) L.push('_' + how.join(' + ') + '_');
-    qs(soc.k).forEach(function (q) {
+    qs(soc).forEach(function (q) {
       var v = (a[q.id] || '').trim();
       L.push('• ' + q.q + ' ' + (v === '__DK__' || !v ? 'PATA NAHI' : v));
     });
@@ -270,12 +297,17 @@ function toast(msg) {
 
 document.getElementById('sendBtn').addEventListener('click', function (e) {
   e.preventDefault();
-  var list = pending();
-  if (!list.length) { toast('Koi nayi puri society nahi hai'); return; }
-  var msg = buildMessage(list);
-  list.forEach(function (soc) { put(soc.n, function (s) { s.sent = true; }); });
+  var r = nextBatch();
+  if (!r.batch.length) { toast('Koi nayi puri society nahi hai'); return; }
+  var msg = buildMessage(r.batch);
+  r.batch.forEach(function (soc) { put(soc.n, function (s) { s.sent = true; }); });
   refresh();
   window.open('https://wa.me/' + VIKAS_WA + '?text=' + encodeURIComponent(msg), '_blank');
+  if (r.left > 0) {
+    toast(r.batch.length + ' bheji ✅  ' + r.left + ' aur baaki hai, dobara Submit dabao');
+  } else {
+    toast(r.batch.length + ' society bhej di ✅');
+  }
 });
 
 document.getElementById('saveBtn').addEventListener('click', function () {
