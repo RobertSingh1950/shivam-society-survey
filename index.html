@@ -161,6 +161,9 @@ var ROUND2 = [
 ];
 
 var KEY = 'shivam-society-facts-v2';
+// Part counter, kept separate from the answers so clearing one does not disturb the other.
+// It only ever increments, so the numbers in the WhatsApp thread stay in order across days.
+var PART_KEY = 'shivam-society-part';
 var state = {};
 try { state = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) { state = {}; }
 var grid = document.getElementById('grid');
@@ -284,22 +287,45 @@ function pending() {
 // Hard cap on one message. Learned the expensive way on 11 August 2026: Sanjay ji filled
 // 19 societies, pressed Submit once, and WhatsApp silently truncated the link mid-sentence
 // at society 19. Three societies never arrived and nothing warned anybody, because a
-// truncated message still looks sent. Capping resends was not enough; the batch itself has
-// to be capped. ~1800 chars leaves generous headroom under the practical wa.me limit.
-var MAX_CHARS = 1800;
+// truncated message still looks sent. That message measured ~15,400 characters once
+// percent-encoded into the wa.me URL, which is the only length that matters here.
+//
+// The original fix capped the RAW message at 1800 characters, which was measuring the
+// wrong string. What travels is the URL, and percent-encoding inflates it: Hinglish runs
+// about 1.6x (bullets, newlines and asterisks all expand), so 1800 raw was really ~2,900
+// on the wire. That happened to be safe. Hindi typed in Devanagari runs **7.8x**, because
+// every character becomes three percent-escapes, and there 1800 raw is ~14,000 encoded,
+// which lands on the exact truncation point that lost three societies. The cap was correct
+// by luck and one Devanagari answer away from reproducing the original bug.
+//
+// So: measure the encoded URL, and cap that. 3500 keeps every message roughly four times
+// under the known-bad length whatever script it is typed in.
+var MAX_URL = 3500;
+
+// Worst-case width of the part tag, so sizing accounts for a header it has not built yet.
+var TAG_SAMPLE = '  (part 99 · 9 society)';
+
+function urlLen(msg) {
+  // wa.me/<12-digit number>?text= is 30 characters before the payload starts.
+  return encodeURIComponent(msg).length + 30;
+}
 
 function nextBatch() {
   var all = pending(), batch = [];
   for (var i = 0; i < all.length; i++) {
     var trial = batch.concat([all[i]]);
-    if (batch.length && buildMessage(trial).length > MAX_CHARS) break;
+    if (batch.length && urlLen(buildMessage(trial, TAG_SAMPLE)) > MAX_URL) break;
     batch = trial;
   }
   return { batch: batch, left: all.length - batch.length };
 }
 
-function buildMessage(list) {
-  var L = ['*SOCIETY DETAILS — Shivam Properties*', ''];
+// A part number and a closing marker. Together they make the two silent failures visible
+// at the filing end: a truncated message loses its last line, and a message that never
+// arrived leaves a hole in the part sequence. Without these, both look identical to
+// "nothing was sent yet", which is how three societies disappeared on 11 August.
+function buildMessage(list, tag) {
+  var L = ['*SOCIETY DETAILS — Shivam Properties*' + (tag || ''), ''];
   list.forEach(function (soc) {
     var s = state[soc.n] || {}; var a = s.a || {};
     var how = [];
@@ -326,6 +352,7 @@ function buildMessage(list) {
     L.push('');
   });
   if (list.length === 0) L.push('(abhi koi society puri nahi bhari)');
+  else L.push('--- khatam, ' + list.length + ' society ---');
   return L.join('\n');
 }
 
@@ -339,7 +366,9 @@ document.getElementById('sendBtn').addEventListener('click', function (e) {
   e.preventDefault();
   var r = nextBatch();
   if (!r.batch.length) { toast('Koi nayi puri society nahi hai'); return; }
-  var msg = buildMessage(r.batch);
+  var part = (parseInt(localStorage.getItem(PART_KEY) || '0', 10) || 0) + 1;
+  localStorage.setItem(PART_KEY, String(part));
+  var msg = buildMessage(r.batch, '  (part ' + part + ' · ' + r.batch.length + ' society)');
   r.batch.forEach(function (soc) { put(soc.n, function (s) { s.sent = true; }); });
   refresh();
   window.open('https://wa.me/' + VIKAS_WA + '?text=' + encodeURIComponent(msg), '_blank');

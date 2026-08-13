@@ -92,6 +92,40 @@ societies in a single message would run past what a `wa.me` link can carry, and 
 truncates silently, which is the worst failure available here because it still looks sent.
 Editing an answer clears the sent flag so the correction goes out on the next Submit.
 
+**The cap is on the percent-encoded URL, not on the message.** This was wrong until
+13 August 2026 and worth understanding before anyone touches it again. What travels to
+WhatsApp is `wa.me/<number>?text=<encoded>`, and encoding inflates the payload by a factor
+that depends entirely on the script it was typed in:
+
+| Typed in | Inflation | 1800 raw chars becomes |
+| --- | --- | --- |
+| Hinglish, Latin letters | ~1.6x | ~2,900 encoded |
+| Hindi, Devanagari | **~7.8x** | **~14,000 encoded** |
+
+The message that silently truncated on 11 August measured about **15,400 encoded
+characters**. The original fix capped the raw message at 1800, which was safe in Hinglish
+and would have landed straight back on the truncation point the first time anyone answered
+in Devanagari. Every character outside ASCII becomes three percent-escapes, and a bullet or
+a newline expands too.
+
+`MAX_URL` is now 3500 measured on the encoded URL, keeping any message about four times
+under the known-bad length in any script. Batch sizes fall out of that automatically:
+roughly 6 Submit presses for 22 societies in Hinglish with Round 1 only, 11 with Round 2,
+and 22 if someone types Devanagari. Fewer societies per press is the correct trade against
+losing three of them silently.
+
+**Every message carries a part number and a closing line.** The header reads
+`(part 3 · 4 society)` and the message ends `--- khatam, 4 society ---`. These exist because
+the two failure modes are otherwise invisible at the filing end: a truncated message loses
+its last line, and a message that never arrived leaves a gap in the part sequence. Before
+this, both looked exactly like "nothing has been sent yet". The counter lives in its own
+`shivam-society-part` localStorage key and only increments, so numbering stays in order
+across days.
+
+**For a big batch, use Copy instead.** The clipboard has no URL limit, so 📋 Copy takes
+every pending society in one go and can be pasted straight into WhatsApp. Submit is the
+convenient path; Copy is the one that cannot truncate.
+
 ## Filing the replies
 
 Paste each reply into `docs/ops/templates/society-intake.csv` in the website repo, one row
