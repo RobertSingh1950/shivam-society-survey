@@ -41,6 +41,32 @@ Sanjay ji already knows how that tool behaves, so this one behaves the same way.
 - Autosaves to the browser, so a half-filled page survives closing the tab
 - Submit sends to the owner's WhatsApp, the same number the photo tool uses
 
+## Round 2 — the comparison columns (added 13 August 2026)
+
+Round 1's four facts are what a buyer needs to avoid losing money. Round 2 is what the
+website needs to put societies in a table next to each other: locality, possession year,
+unit count, the charges stacked on top of the quoted rate, rent, and whether we hold stock
+there. None of these are in `projects.json`, and without them a comparison page can rank
+projects on price and governance but cannot say where a society is or how old it is.
+
+They live in the `ROUND2` array and are **excluded from `isDone()` on purpose**. Round 1 was
+filled for 19 societies on 11 August. Folding six more questions into `COMMON` would have
+flipped all 19 back to incomplete and re-queued them for sending, which punishes the person
+who already did the work and makes the progress bar lie about what is left. Optional keeps a
+finished list finished.
+
+Consequences of that choice, all intended:
+
+- The progress bar and the `X/6` card counter still count Round 1 only.
+- An unanswered Round 2 question is **silence** in the WhatsApp message, not `PATA NAHI`.
+  Only an explicit "pata nahi" tap sends `PATA NAHI`, because on an optional question the
+  two genuinely differ: one was skipped, the other was asked and could not be answered.
+- Round 2 answers appear under an `_extra:_` sub-heading so they file separately.
+- Editing a Round 2 field clears the `sent` flag, so the society re-sends in full on the
+  next Submit. Same rule as Round 1.
+- Messages are longer now, so `nextBatch()` fits fewer societies per Submit. It measures
+  the built message rather than counting societies, so it adapts without a change.
+
 ## The design decisions that matter
 
 **"Pata nahi" is a first-class answer, not an empty field.** A question nobody asked and a
