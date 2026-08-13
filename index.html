@@ -12,8 +12,8 @@
   .sub { color: #9aa3b2; font-size: 14px; margin-bottom: 14px; }
   .sub b { color: #e8eaf0; }
   .progress { position: sticky; top: 0; z-index: 5; background: #0f1115; padding: 8px 0; font-size: 14px; color: #35d6f4; font-weight: 600; }
-  .warn { background: #181c24; border: 1px solid #262c38; border-left: 3px solid #d9a441; border-radius: 10px; padding: 12px 14px; font-size: 13.5px; color: #9aa3b2; margin-bottom: 16px; }
-  .warn b { color: #e8eaf0; }
+  .note { background: #181c24; border: 1px solid #262c38; border-radius: 10px; padding: 12px 14px; font-size: 13.5px; color: #9aa3b2; margin-bottom: 16px; }
+  .note b { color: #e8eaf0; }
   .grid { display: grid; gap: 12px; grid-template-columns: 1fr; }
   @media (min-width: 780px) { .grid { grid-template-columns: 1fr 1fr; } }
   .card { background: #181c24; border: 1px solid #262c38; border-radius: 12px; overflow: hidden; }
@@ -27,50 +27,43 @@
   .card.done .tick { display: inline; }
   .cnt { font-size: 12px; color: #6d7688; font-weight: 700; }
   .body { padding: 0 14px 14px; }
-  .q { margin-bottom: 14px; }
-  .qtext { font-size: 13.5px; color: #e8eaf0; font-weight: 600; margin-bottom: 2px; }
-  .qhint { font-size: 12px; color: #6d7688; margin-bottom: 6px; }
-  input[type=text], input[type=date] { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #333a48; background: #10141b; color: #e8eaf0; font-size: 15px; font-family: inherit; }
-  .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-  .row input[type=text] { flex: 1 1 180px; }
-  .chip { display: inline-flex; align-items: center; gap: 7px; border: 1px solid #333a48; border-radius: 999px; padding: 7px 12px; font-size: 12.5px; color: #9aa3b2; cursor: pointer; font-weight: 600; white-space: nowrap; }
-  .chip input { accent-color: #d9a441; }
-  .chip.on { border-color: #d9a441; color: #e8eaf0; }
-  .dk.on { border-color: #b06a6a; color: #e8b3b3; }
-  .meta { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+  label { display: block; font-size: 12.5px; color: #9aa3b2; margin: 10px 0 3px; }
+  select, input[type=text] { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #333a48; background: #10141b; color: #e8eaf0; font-size: 15px; font-family: inherit; }
+  select.set { border-color: #2f6b4f; }
+  .other { display: none; margin-top: 6px; }
+  .chips { display: flex; gap: 7px; flex-wrap: wrap; margin-top: 3px; }
+  .chip { display: inline-flex; align-items: center; gap: 6px; border: 1px solid #333a48; border-radius: 999px; padding: 8px 13px; font-size: 13px; color: #9aa3b2; cursor: pointer; font-weight: 600; white-space: nowrap; }
+  .chip input { display: none; }
+  .chip.on { border-color: #35d6f4; color: #0f1115; background: #35d6f4; }
+  .chip.dkon { border-color: #b06a6a; color: #e8b3b3; background: transparent; }
+  .meta { display: flex; gap: 8px; flex-wrap: wrap; margin: 12px 0 2px; }
+  .meta .chip.on { border-color: #d9a441; background: #d9a441; color: #1a1204; }
+  .r2 { border-top: 1px dashed #333a48; margin-top: 16px; padding-top: 10px; }
+  .r2h { font-size: 12.5px; color: #35d6f4; font-weight: 700; }
+  .r2n { font-size: 12px; color: #6d7688; }
   .bar { position: fixed; left: 0; right: 0; bottom: 0; background: #141922; border-top: 1px solid #262c38; padding: 12px 14px; display: flex; gap: 10px; }
   .btn { flex: 1; padding: 13px 10px; border: 0; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; text-align: center; text-decoration: none; font-family: inherit; }
   .btn-wa { background: #25d366; color: #06280f; }
   .btn-copy { background: #2a3140; color: #e8eaf0; flex: 0 0 92px; }
-  .toast { position: fixed; bottom: 84px; left: 50%; transform: translateX(-50%); background: #2ea86f; color: #04120a; padding: 10px 18px; border-radius: 8px; font-weight: 700; display: none; z-index: 9; }
+  .toast { position: fixed; bottom: 84px; left: 50%; transform: translateX(-50%); background: #2ea86f; color: #04120a; padding: 10px 18px; border-radius: 8px; font-weight: 700; display: none; z-index: 9; max-width: 90%; text-align: center; }
   .foot { margin: 24px 0 0; font-size: 12.5px; color: #6d7688; }
   .foot a { color: #9aa3b2; }
-  .r2 { border-top: 1px dashed #333a48; margin-top: 4px; padding-top: 12px; }
-  .r2h { font-size: 12.5px; color: #35d6f4; font-weight: 700; margin-bottom: 3px; }
-  .r2n { font-size: 12px; color: #6d7688; margin-bottom: 12px; }
 </style>
 </head>
 <body>
 
 <h1>🏢 Shivam Properties — Society Details</h1>
-<p class="sub">Sanjay ji, har society ke baare mein <b>6 baatein</b> chahiye. Ye baatein kisi
-portal par nahi milti, isliye website par yahi hamari sabse badi taakat hain.
-<b>Saari societies bharni hain</b>, sirf ek do nahi. Ek din mein 2-3 kar lijiye to hafte bhar
-mein poori list ho jayegi. Sab kuch <b>apne aap save hota rehta hai</b>, aadha bhar ke band
-kar doge to bhi save rahega. 👍
-<br><br>
-Har society mein neeche <b>"Extra baatein"</b> ka hissa bhi hai. Wo <b>zaroori nahi</b> hai,
-bhare bina bhi society poori ginti hai. Jab time mile tab bhar dijiye, website par societies
-ka comparison table usi se banta hai.</p>
+<p class="sub">Sanjay ji, har society ke baare mein kuch baatein chahiye. Zyada tar sirf
+<b>list mein se choose karna hai</b>, likhna nahi padega. Jo pata nahi hai uspar
+<b>"pata nahi"</b> choose kar dijiye. Sab kuch <b>apne aap save hota rehta hai</b>. 👍</p>
 
-<div class="warn">
-  <b>Andaaza kabhi mat lagaiye.</b> Jo confirm nahi hai, uspar seedha <b>"pata nahi"</b> daba
-  dijiye. "Pata nahi" bharna galti nahi hai, hum website par saaf likh dete hain ki ye cheez
-  humne confirm nahi ki. Lekin ek galat number website par gaya to customer ka bharosa jaata
-  hai, aur wo wapas nahi aata.
+<div class="note">
+  <b>Andaaza mat lagaiye.</b> "Pata nahi" bharna galti nahi hai, hum website par saaf likh
+  dete hain ki ye humne confirm nahi kiya. Lekin ek galat baat website par gayi to customer
+  ka bharosa jaata hai.
   <br><br>
-  📵 Kisi client ka <b>naam, number ya rate</b> yahan kabhi mat likhiye. Ye sirf buildings ke
-  baare mein hai, logon ke baare mein nahi.
+  📵 Kisi client ka <b>naam, number ya rate</b> yahan mat likhiye. Ye sirf buildings ke
+  baare mein hai.
 </div>
 
 <div class="progress" id="progress"></div>
@@ -90,11 +83,6 @@ ka comparison table usi se banta hai.</p>
 // Owner's WhatsApp. Same number the photo tool sends to, so everything lands in one place.
 var VIKAS_WA = '918570009071';
 
-// Societies we hold data on. Names and zone hints follow the photo tool's list, because
-// that is the vocabulary Sanjay ji already recognises, plus the three from the website's
-// projects.json that the photo tool was missing.
-// "kind" changes the last two questions: a plotted township has no lift and no club house,
-// and asking about them makes the tool look like it does not know the local market.
 var SOCIETIES = [
   { n: 'MVL Coral', k: 'flat' },
   { n: 'HFL Presidency Estate', k: 'flat' },
@@ -120,80 +108,111 @@ var SOCIETIES = [
   { n: 'Dwarkadish', k: 'plot', z: 'Dharuhera' }
 ];
 
-// The four facts no portal carries. Money first: it is the one the society office answers
-// without hesitating, and it warms up the rest.
-var COMMON = [
-  { id: 'maint', q: 'Maintenance kitna, aur kaun leta hai?', h: 'Per sq ft ya poore flat ka. Builder leta hai, RWA leti hai, ya koi nahi.', p: '2 rs per sq ft, RWA leti hai' },
-  { id: 'rwa', q: 'RWA bani hai ya nahi?', h: 'Registered RWA hai, ya sirf informal committee, ya kuch bhi nahi.', p: 'registered hai, 2019 se' },
-  { id: 'noc', q: 'Transfer / NOC mein kitna time aur paisa?', h: 'NOC kitne din mein, charge kitna, koi shart hai kya.', p: '15 din, 25000, dues clear hone chahiye' },
-  { id: 'loan', q: 'Kaun se bank yahan loan dete hain?', h: 'Jo naam yaad ho. Koi bank mana karta ho to wo aur zyada kaam ki baat hai.', p: 'SBI aur HDFC, ek bank mana karta hai' }
-];
-var FLAT_ONLY = [
-  { id: 'services', q: 'Paani, bijli backup aur lift ka kya haal hai?', h: 'Paani kitne ghante, backup sach mein chalta hai ya nahi, lift theek hai ya nahi.', p: 'paani subah shaam, backup chalta hai, ek lift band' },
-  { id: 'club', q: 'Club house / pool / park khula hai ya band?', h: 'Brochure mein sab hota hai. Sach mein kya chal raha hai wahi likhiye.', p: 'club khula hai, pool band pada hai' }
-];
-var PLOT_ONLY = [
-  { id: 'services', q: 'Andar ki sadak, paani aur bijli ka kya haal hai?', h: 'Sadak bani hai ya nahi, paani boring se ya connection, bijli ka meter lagta hai ya nahi.', p: 'sadak bani hai, paani boring se, meter lag jaata hai' },
-  { id: 'handover', q: 'Authority (BIDA / UIT) ko handover hui ya builder ke paas hai?', h: 'Isse pata chalta hai aage maintenance kaun karega. Buyer ke liye badi baat hai.', p: 'abhi builder ke paas hai' }
-];
-
-// Dharuhera is Haryana, so BIDA and UIT have no jurisdiction there at all: the licensing
-// route is DTCP Haryana, usually under the DDJAY scheme. Sanjay ji answered the BIDA
-// question with "DDJAY" for MGH Anandam on 11 August 2026, which is him correcting the
-// question rather than answering it. Ask the right one.
-var HARYANA_HANDOVER = { id: 'handover', q: 'DTCP Haryana licence / DDJAY hai, ya HSVP ko handover ho chuka?', h: 'Dharuhera Haryana mein hai, yahan BIDA ya UIT nahi chalta. Licence number pata ho to likh dijiye.', p: 'DDJAY colony hai, licence builder ke paas' };
-
-// Round 2, added 13 August 2026. These are the columns the website's project-comparison
-// pages need and projects.json does not carry: locality, age, size, the charges stacked on
-// top of the quoted rate, rent, and whether we actually hold stock there.
+// Rewritten 13 August 2026 in the photo tool's idiom. The previous version asked twelve
+// free-text questions per society, which on a phone is 264 typed answers. That is why the
+// messages were enormous, why they needed splitting into parts, and why a truncation bug
+// was possible at all. Tapping a list instead of typing shrinks the answer to a token, and
+// almost every problem downstream shrinks with it.
 //
-// They are DELIBERATELY optional and excluded from isDone(). Round 1 was filled for 19
-// societies on 11 August; folding these into COMMON would have flipped all 19 back to
-// incomplete and re-queued them, which punishes the person who already did the work and
-// makes the progress bar lie. Optional keeps the finished list finished.
-var ROUND2 = [
-  { id: 'loc', q: 'Ye society/colony exactly kahan hai?', h: 'Sector, road ka naam, ya paas ka koi jaana pehchana point.', p: 'Alwar Bypass Road, Sector 51 ke paas' },
-  { id: 'year', q: 'Possession kab mili? Log kab se reh rahe hain?', h: 'Sirf saal kaafi hai. Andaaza ho to "lagbhag" likh dijiye.', p: '2018 se log reh rahe hain' },
-  { id: 'units', q: 'Total kitne flat / plot hain?', h: 'Tower kitne hain wo bhi likh sakte hain. Andaaza chalega.', p: 'lagbhag 400 flat, 6 tower' },
-  { id: 'extra', q: 'Rate ke upar aur kya kharcha lagta hai?', h: 'Floor rise, park facing ka extra, parking, club membership, bijli ka meter deposit.', p: 'parking 2 lakh, club 50000, floor rise 25 rs sq ft' },
-  { id: 'rent', q: 'Yahan kiraya kitna chalta hai?', h: 'Jo aaj chal raha hai. 2 BHK aur 3 BHK alag alag.', p: '2 BHK 8-9 hazar, 3 BHK 12 hazar' },
-  { id: 'stock', q: 'Abhi humare paas yahan bikne ko kuch hai?', h: 'Haan / nahi. Isse pata chalta hai website par kis society ko aage rakhna hai.', p: 'haan, 2 flat aur 1 plot hai' }
+// "pata nahi" is now the FIRST option in every list rather than a separate checkbox. It
+// stays a first-class answer, which is the design rule that matters, and it costs one tap
+// instead of a reach to a different control.
+var DK = 'pata nahi';
+var ASK = '— choose karo —';
+
+// t: 'one' = single-choice list, 'many' = tap-multiple chips, 'text' = free text (last resort)
+// 'o' on a list means an extra "koi aur" box appears when picked, exactly like the photo
+// tool's project dropdown. Bands lose the difference between 2 and 2.25 rupees, and that
+// difference is real in the Terra societies, so the escape hatch has to be there.
+var CORE = [
+  { id: 'maint', l: 'Maintenance kitna hai?', t: 'one', o: true,
+    v: [DK, 'koi nahi le raha', '₹1 per sq ft', '₹1.5 per sq ft', '₹2 per sq ft', '₹2.25 per sq ft', '₹2.5 per sq ft', '₹3 per sq ft', '₹5 per gaj', '₹7 per gaj', 'koi aur'] },
+  { id: 'mwho', l: 'Maintenance kaun leta hai?', t: 'one',
+    v: [DK, 'RWA leti hai', 'builder leta hai', 'koi nahi leta'] },
+  { id: 'rwa', l: 'RWA bani hai?', t: 'one',
+    v: [DK, 'registered RWA hai', 'sirf committee hai', 'nahi bani'] },
+  { id: 'noct', l: 'Transfer / NOC mein kitna time?', t: 'one',
+    v: [DK, '1 hafta', '2 hafte', '1 mahina', '1 mahine se zyada'] },
+  { id: 'nocc', l: 'NOC ka charge kitna?', t: 'one', o: true,
+    v: [DK, 'koi charge nahi', '10 hazar tak', '10-25 hazar', '25-50 hazar', '50 hazar se zyada', 'case ke hisaab se', 'koi aur'] },
+  { id: 'bank', l: 'Kaun se bank loan dete hain?', t: 'many',
+    v: [DK, 'SBI', 'HDFC', 'ICICI', 'PNB', 'Axis', 'koi bank nahi deta'] }
+];
+var FLAT = [
+  { id: 'serv', l: 'Kya kya theek chal raha hai?', t: 'many',
+    v: [DK, 'paani 24 ghante', 'paani subah shaam', 'backup chalta hai', 'lift theek hai', 'lift kharab hai'] },
+  { id: 'club', l: 'Club house / pool / park?', t: 'one',
+    v: [DK, 'khula hai, chal raha hai', 'abhi ban raha hai', 'hai hi nahi'] }
+];
+var PLOT = [
+  { id: 'serv', l: 'Andar ka development?', t: 'many',
+    v: [DK, 'sadak bani hai', 'sewer bana hai', 'paani connection hai', 'paani boring se', 'bijli meter lag jaata hai'] },
+  { id: 'hand', l: 'Handover kis ke paas?', t: 'one',
+    v: [DK, 'BIDA ko ho gaya', 'UIT ko ho gaya', 'abhi builder ke paas hai'] }
+];
+// Dharuhera is Haryana. BIDA and UIT have no jurisdiction there at all, so asking the
+// question in those words invites a wrong answer. Sanjay ji answered the BIDA question with
+// "DDJAY" for MGH Anandam on 11 August 2026, which was him correcting the question.
+var HR = { id: 'hand', l: 'Handover / licence (Haryana)?', t: 'one',
+  v: [DK, 'DDJAY colony hai', 'DTCP licence hai', 'HSVP ko ho gaya', 'abhi builder ke paas hai'] };
+
+// Optional. Excluded from the done count on purpose: 19 societies were completed on
+// 11 August, and making these required would have flipped all 19 back to incomplete.
+var EXTRA = [
+  { id: 'year', l: 'Possession kab mili?', t: 'one', o: true,
+    v: [DK, '2015 se pehle', '2015-2018', '2018-2021', '2021-2024', '2024 ke baad', 'abhi tak nahi', 'koi aur'] },
+  { id: 'stock', l: 'Abhi humare paas yahan kuch bikne ko hai?', t: 'one',
+    v: [DK, 'haan hai', 'nahi hai'] },
+  { id: 'loc', l: 'Kahan par hai? (sector / road ka naam)', t: 'text', p: 'Alwar Bypass Road ke paas' },
+  { id: 'rent', l: 'Kiraya kitna chalta hai?', t: 'text', p: '2 BHK 8 hazar, 3 BHK 12 hazar' },
+  { id: 'more', l: 'Aur kuch batana ho?', t: 'text', p: 'jo bhi zaroori lage' }
 ];
 
-var KEY = 'shivam-society-facts-v2';
-// Part counter, kept separate from the answers so clearing one does not disturb the other.
-// It only ever increments, so the numbers in the WhatsApp thread stay in order across days.
+// v3: the answer shape changed from free text to tokens, so old v2 answers cannot be read
+// back. Nothing is lost. Everything filled on 11 August was already sent and is now in
+// projects.json in the website repo.
+var KEY = 'shivam-society-facts-v3';
 var PART_KEY = 'shivam-society-part';
 var state = {};
 try { state = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) { state = {}; }
 var grid = document.getElementById('grid');
 
-function qs(soc) {
-  if (soc.k !== 'plot') return COMMON.concat(FLAT_ONLY);
-  var tail = soc.z === 'Dharuhera' ? [PLOT_ONLY[0], HARYANA_HANDOVER] : PLOT_ONLY;
-  return COMMON.concat(tail);
+function core(soc) {
+  if (soc.k !== 'plot') return CORE.concat(FLAT);
+  return CORE.concat(soc.z === 'Dharuhera' ? [PLOT[0], HR] : PLOT);
 }
 function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;'); }
+function val(soc, id) { var s = state[soc.n] || {}; return (s.a || {})[id] || ''; }
+
+function field(soc, q) {
+  var v = val(soc, q.id);
+  var h = '<label>' + q.l + '</label>';
+  if (q.t === 'text') {
+    return h + '<input type="text" data-soc="' + esc(soc.n) + '" data-q="' + q.id + '" placeholder="' + esc(q.p || '') + '" value="' + esc(v) + '">';
+  }
+  if (q.t === 'many') {
+    // Multi-select. "pata nahi" clears the rest, since knowing nothing and knowing four
+    // things are not states that can both be true.
+    var picked = v ? v.split(', ') : [];
+    return h + '<div class="chips">' + q.v.map(function (o) {
+      var on = picked.indexOf(o) >= 0;
+      return '<label class="chip' + (on ? (o === DK ? ' dkon' : ' on') : '') + '">' +
+        '<input type="checkbox" data-soc="' + esc(soc.n) + '" data-many="' + q.id + '" value="' + esc(o) + '"' + (on ? ' checked' : '') + '>' + esc(o) + '</label>';
+    }).join('') + '</div>';
+  }
+  var opts = [ASK].concat(q.v).map(function (o) {
+    return '<option' + (o === v ? ' selected' : '') + '>' + esc(o) + '</option>';
+  }).join('');
+  var other = q.o
+    ? '<input class="other" type="text" data-soc="' + esc(soc.n) + '" data-q="' + q.id + '__o" placeholder="likh dijiye" value="' + esc(val(soc, q.id + '__o')) + '"' + (v === 'koi aur' ? ' style="display:block"' : '') + '>'
+    : '';
+  return h + '<select class="' + (v && v !== ASK ? 'set' : '') + '" data-soc="' + esc(soc.n) + '" data-q="' + q.id + '">' + opts + '</select>' + other;
+}
 
 SOCIETIES.forEach(function (soc) {
   var s = state[soc.n] || {};
   var card = document.createElement('details');
   card.className = 'card';
-  function qBlock(q) {
-    var v = (s.a && s.a[q.id]) || '';
-    var dk = v === '__DK__';
-    return '<div class="q">' +
-      '<div class="qtext">' + q.q + '</div>' +
-      '<div class="qhint">' + q.h + '</div>' +
-      '<div class="row">' +
-        '<input type="text" data-soc="' + esc(soc.n) + '" data-q="' + q.id + '" placeholder="' + esc(q.p) + '" value="' + (dk ? '' : esc(v)) + '"' + (dk ? ' disabled' : '') + '>' +
-        '<label class="chip dk' + (dk ? ' on' : '') + '"><input type="checkbox" data-soc="' + esc(soc.n) + '" data-dk="' + q.id + '"' + (dk ? ' checked' : '') + '> pata nahi</label>' +
-      '</div></div>';
-  }
-  var qhtml = qs(soc).map(qBlock).join('');
-  var r2html = '<div class="r2"><div class="r2h">Extra baatein (jab time mile)</div>' +
-    '<div class="r2n">Ye zaroori nahi hain. Bhare bina bhi society poori ginti hai. Jo pata ho wo bhar dijiye, website par comparison table isi se banta hai.</div>' +
-    ROUND2.map(qBlock).join('') + '</div>';
   card.innerHTML =
     '<summary>' +
       '<span class="nm">' + esc(soc.n) + (soc.z ? ' <span class="zone">' + esc(soc.z) + '</span>' : '') + '</span>' +
@@ -201,48 +220,34 @@ SOCIETIES.forEach(function (soc) {
     '</summary>' +
     '<div class="body">' +
       '<div class="meta">' +
-        '<label class="chip"><input type="checkbox" data-soc="' + esc(soc.n) + '" data-meta="visited"' + (s.visited ? ' checked' : '') + '> main khud gaya tha</label>' +
-        '<label class="chip"><input type="checkbox" data-soc="' + esc(soc.n) + '" data-meta="office"' + (s.office ? ' checked' : '') + '> office / guard se pucha</label>' +
+        '<label class="chip' + (s.visited ? ' on' : '') + '"><input type="checkbox" data-soc="' + esc(soc.n) + '" data-meta="visited"' + (s.visited ? ' checked' : '') + '>main khud gaya tha</label>' +
+        '<label class="chip' + (s.office ? ' on' : '') + '"><input type="checkbox" data-soc="' + esc(soc.n) + '" data-meta="office"' + (s.office ? ' checked' : '') + '>office / guard se pucha</label>' +
       '</div>' +
-      qhtml +
-      '<div class="q"><div class="qtext">Customer is society ko kis se compare karta hai?</div>' +
-      '<div class="qhint">Jaise: "Essentia dekhun ya MVL Coral?" 1 se 3 naam, comma se alag.</div>' +
-      '<input type="text" data-soc="' + esc(soc.n) + '" data-q="__cmp" placeholder="MVL Coral, Terra Heritage" value="' + esc((s.a && s.a.__cmp) || '') + '"></div>' +
-      r2html +
+      core(soc).map(function (q) { return field(soc, q); }).join('') +
+      '<div class="r2"><div class="r2h">Extra (zaroori nahi)</div>' +
+      '<div class="r2n">Bhare bina bhi society poori ginti hai.</div>' +
+      EXTRA.map(function (q) { return field(soc, q); }).join('') + '</div>' +
     '</div>';
   grid.appendChild(card);
 });
 
-// A society counts as done only when every question has a real answer OR an explicit
-// "pata nahi". Half-filled does not count, because the point of the progress bar is to
-// drive the list to completion rather than to reward a good start.
+// Done when every core question has an answer, and "pata nahi" counts as one. Half-filled
+// does not tick, so the counter drives the list to completion rather than rewarding a start.
 function isDone(soc) {
-  var s = state[soc.n] || {}; var a = s.a || {};
-  return qs(soc).every(function (q) { return (a[q.id] || '').trim() !== ''; });
+  return core(soc).every(function (q) { return (val(soc, q.id) || '').trim() !== ''; });
 }
 
 function refresh() {
   var done = 0, unsent = 0;
   document.querySelectorAll('.card').forEach(function (card, i) {
     var soc = SOCIETIES[i];
-    var s = state[soc.n] || {}; var a = s.a || {};
+    var s = state[soc.n] || {};
     var d = isDone(soc);
     card.classList.toggle('done', d);
     card.classList.toggle('sent', !!s.sent);
-    var filled = qs(soc).filter(function (q) { return (a[q.id] || '').trim() !== ''; }).length;
-    card.querySelector('.cnt').textContent = s.sent ? 'bhej diya' : filled + '/' + qs(soc).length;
+    var filled = core(soc).filter(function (q) { return (val(soc, q.id) || '').trim() !== ''; }).length;
+    card.querySelector('.cnt').textContent = s.sent ? 'bhej diya' : filled + '/' + core(soc).length;
     if (d) { done++; if (!s.sent) unsent++; }
-    qs(soc).concat(ROUND2).forEach(function (q) {
-      var box = card.querySelector('[data-dk="' + q.id + '"]');
-      if (!box) return;
-      var txt = card.querySelector('[data-q="' + q.id + '"]');
-      var on = (a[q.id] === '__DK__');
-      box.parentNode.className = 'chip dk' + (on ? ' on' : '');
-      if (txt) { txt.disabled = on; if (on) txt.value = ''; }
-    });
-    card.querySelectorAll('[data-meta]').forEach(function (b) {
-      b.parentNode.className = 'chip' + (b.checked ? ' on' : '');
-    });
   });
   document.getElementById('progress').textContent =
     done + ' / ' + SOCIETIES.length + ' society done' + (unsent ? '  ·  ' + unsent + ' bhejni baaki hai' : '');
@@ -264,51 +269,50 @@ document.addEventListener('input', function (e) {
 });
 
 document.addEventListener('change', function (e) {
-  var el = e.target;
-  if (!el.dataset || !el.dataset.soc) return;
-  if (el.dataset.dk) {
-    put(el.dataset.soc, function (s) { s.a[el.dataset.dk] = el.checked ? '__DK__' : ''; s.sent = false; });
+  var el = e.target, d = el.dataset;
+  if (!d || !d.soc) return;
+  if (d.q && el.tagName === 'SELECT') {
+    var v = el.value === ASK ? '' : el.value;
+    put(d.soc, function (s) { s.a[d.q] = v; s.sent = false; });
+    el.className = v ? 'set' : '';
+    var box = el.parentNode.querySelector('.other[data-q="' + d.q + '__o"]');
+    if (box) box.style.display = v === 'koi aur' ? 'block' : 'none';
     refresh();
-  } else if (el.dataset.meta) {
-    put(el.dataset.soc, function (s) { s[el.dataset.meta] = el.checked; s.sent = false; });
+  } else if (d.many) {
+    put(d.soc, function (s) {
+      var cur = (s.a[d.many] || '').split(', ').filter(Boolean);
+      if (el.checked) {
+        cur = el.value === DK ? [DK] : cur.filter(function (x) { return x !== DK; }).concat([el.value]);
+      } else {
+        cur = cur.filter(function (x) { return x !== el.value; });
+      }
+      s.a[d.many] = cur.join(', ');
+      s.sent = false;
+    });
+    // Repaint this whole chip group, because picking "pata nahi" clears its siblings.
+    var group = el.closest('.chips');
+    var now = (val({ n: d.soc }, d.many) || '').split(', ').filter(Boolean);
+    group.querySelectorAll('input[data-many]').forEach(function (b) {
+      var on = now.indexOf(b.value) >= 0;
+      b.checked = on;
+      b.parentNode.className = 'chip' + (on ? (b.value === DK ? ' dkon' : ' on') : '');
+    });
+    refresh();
+  } else if (d.meta) {
+    put(d.soc, function (s) { s[d.meta] = el.checked; s.sent = false; });
+    el.parentNode.className = 'chip' + (el.checked ? ' on' : '');
     refresh();
   }
 });
 
-// Only completed, not-yet-sent societies go out, and they are marked sent afterwards. A
-// single message carrying all 22 societies would run past what a wa.me link can carry and
-// WhatsApp would silently truncate it, which is the worst possible failure: it looks sent.
-function pending() {
-  return SOCIETIES.filter(function (soc) {
-    return isDone(soc) && !(state[soc.n] || {}).sent;
-  });
-}
-
-// Hard cap on one message. Learned the expensive way on 11 August 2026: Sanjay ji filled
-// 19 societies, pressed Submit once, and WhatsApp silently truncated the link mid-sentence
-// at society 19. Three societies never arrived and nothing warned anybody, because a
-// truncated message still looks sent. That message measured ~15,400 characters once
-// percent-encoded into the wa.me URL, which is the only length that matters here.
-//
-// The original fix capped the RAW message at 1800 characters, which was measuring the
-// wrong string. What travels is the URL, and percent-encoding inflates it: Hinglish runs
-// about 1.6x (bullets, newlines and asterisks all expand), so 1800 raw was really ~2,900
-// on the wire. That happened to be safe. Hindi typed in Devanagari runs **7.8x**, because
-// every character becomes three percent-escapes, and there 1800 raw is ~14,000 encoded,
-// which lands on the exact truncation point that lost three societies. The cap was correct
-// by luck and one Devanagari answer away from reproducing the original bug.
-//
-// So: measure the encoded URL, and cap that. 3500 keeps every message roughly four times
-// under the known-bad length whatever script it is typed in.
+// What travels is the percent-encoded wa.me URL, not the message, and encoding inflates it
+// by ~1.6x in Hinglish and ~7.8x in Devanagari. The message that silently truncated on
+// 11 August 2026 was ~15,400 encoded characters. Capping the raw message was measuring the
+// wrong string. Tokens made the answers small enough that this rarely splits at all now,
+// but the guard stays: a silent truncation still looks exactly like a successful send.
 var MAX_URL = 3500;
-
-// Worst-case width of the part tag, so sizing accounts for a header it has not built yet.
 var TAG_SAMPLE = '  (part 99 · 9 society)';
-
-function urlLen(msg) {
-  // wa.me/<12-digit number>?text= is 30 characters before the payload starts.
-  return encodeURIComponent(msg).length + 30;
-}
+function urlLen(msg) { return encodeURIComponent(msg).length + 30; }
 
 function nextBatch() {
   var all = pending(), batch = [];
@@ -320,35 +324,29 @@ function nextBatch() {
   return { batch: batch, left: all.length - batch.length };
 }
 
-// A part number and a closing marker. Together they make the two silent failures visible
-// at the filing end: a truncated message loses its last line, and a message that never
-// arrived leaves a hole in the part sequence. Without these, both look identical to
-// "nothing was sent yet", which is how three societies disappeared on 11 August.
+function pending() {
+  return SOCIETIES.filter(function (soc) { return isDone(soc) && !(state[soc.n] || {}).sent; });
+}
+
+// One line per society, like the photo tool. The old format spent a line per question and
+// repeated the full question text, so one society ran to fourteen lines and the whole list
+// could not fit in a message at all.
 function buildMessage(list, tag) {
   var L = ['*SOCIETY DETAILS — Shivam Properties*' + (tag || ''), ''];
   list.forEach(function (soc) {
-    var s = state[soc.n] || {}; var a = s.a || {};
-    var how = [];
-    if (s.visited) how.push('khud gaya tha');
-    if (s.office) how.push('office/guard se pucha');
-    L.push('*' + soc.n + '*' + (soc.z ? ' (' + soc.z + ')' : ''));
-    if (how.length) L.push('_' + how.join(' + ') + '_');
-    qs(soc).forEach(function (q) {
-      var v = (a[q.id] || '').trim();
-      L.push('• ' + q.q + ' ' + (v === '__DK__' || !v ? 'PATA NAHI' : v));
+    var s = state[soc.n] || {};
+    var bits = [];
+    core(soc).concat(EXTRA).forEach(function (q) {
+      var v = (val(soc, q.id) || '').trim();
+      if (!v) return;
+      if (v === 'koi aur') v = (val(soc, q.id + '__o') || '').trim() || 'koi aur';
+      bits.push(short(q.id) + ': ' + (v === DK ? 'PATA NAHI' : v));
     });
-    if ((a.__cmp || '').trim()) L.push('• Compare: ' + a.__cmp.trim());
-    // Round 2 is optional, so an unanswered one is silence rather than PATA NAHI. An
-    // explicit "pata nahi" here still goes out: it is a real answer and it is what the
-    // website's "what we could not verify" section is built from.
-    var extra = ROUND2.filter(function (q) { return (a[q.id] || '').trim() !== ''; });
-    if (extra.length) {
-      L.push('_extra:_');
-      extra.forEach(function (q) {
-        var v = a[q.id].trim();
-        L.push('• ' + q.q + ' ' + (v === '__DK__' ? 'PATA NAHI' : v));
-      });
-    }
+    var how = [];
+    if (s.visited) how.push('khud gaya');
+    if (s.office) how.push('office se pucha');
+    L.push('*' + soc.n + '*' + (soc.z ? ' (' + soc.z + ')' : '') + (how.length ? ' _' + how.join(' + ') + '_' : ''));
+    L.push(bits.join(' | '));
     L.push('');
   });
   if (list.length === 0) L.push('(abhi koi society puri nahi bhari)');
@@ -356,10 +354,16 @@ function buildMessage(list, tag) {
   return L.join('\n');
 }
 
+// Short keys keep the message compact and are what the filing side matches on.
+var SHORT = { maint: 'maint', mwho: 'kaun', rwa: 'RWA', noct: 'NOC time', nocc: 'NOC charge',
+  bank: 'bank', serv: 'services', club: 'club', hand: 'handover', year: 'possession',
+  stock: 'stock', loc: 'jagah', rent: 'kiraya', more: 'aur' };
+function short(id) { return SHORT[id] || id; }
+
 function toast(msg) {
   var t = document.getElementById('toast');
   t.textContent = msg; t.style.display = 'block';
-  setTimeout(function () { t.style.display = 'none'; }, 2200);
+  setTimeout(function () { t.style.display = 'none'; }, 2600);
 }
 
 document.getElementById('sendBtn').addEventListener('click', function (e) {
@@ -372,11 +376,9 @@ document.getElementById('sendBtn').addEventListener('click', function (e) {
   r.batch.forEach(function (soc) { put(soc.n, function (s) { s.sent = true; }); });
   refresh();
   window.open('https://wa.me/' + VIKAS_WA + '?text=' + encodeURIComponent(msg), '_blank');
-  if (r.left > 0) {
-    toast(r.batch.length + ' bheji ✅  ' + r.left + ' aur baaki hai, dobara Submit dabao');
-  } else {
-    toast(r.batch.length + ' society bhej di ✅');
-  }
+  toast(r.left > 0
+    ? r.batch.length + ' bheji ✅  ' + r.left + ' aur baaki, dobara Submit dabao'
+    : r.batch.length + ' society bhej di ✅');
 });
 
 document.getElementById('saveBtn').addEventListener('click', function () {
@@ -384,11 +386,12 @@ document.getElementById('saveBtn').addEventListener('click', function () {
   toast('Save ho gaya ✅ Baad me wapas aake aage bhar sakte ho');
 });
 
+// Clipboard has no URL limit, so Copy takes everything at once and cannot truncate.
 document.getElementById('copyBtn').addEventListener('click', function () {
   var list = pending();
   var msg = buildMessage(list.length ? list : SOCIETIES.filter(isDone));
   if (navigator.clipboard) {
-    navigator.clipboard.writeText(msg).then(function () { toast('Copy ho gaya ✅'); },
+    navigator.clipboard.writeText(msg).then(function () { toast('Copy ho gaya ✅ WhatsApp me paste kar dijiye'); },
       function () { toast('Copy nahi hua'); });
   } else { toast('Copy nahi hua'); }
 });
