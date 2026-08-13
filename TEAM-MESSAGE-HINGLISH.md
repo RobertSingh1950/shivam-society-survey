@@ -53,9 +53,18 @@ hai*, bina bhare bhi society poori ginti hai. Jab time mile tab bhar dijiye, web
 societies ka comparison table isi se banta hai.
 
 *Submit baar baar dabana padega* 🔁
-Har baar sirf *nayi puri hui* societies jaati hain, purani dobara nahi. Saari 22 ek saath
-nahi ja sakti kyunki WhatsApp lamba message kaat deta hai. Tool khud hi tukdon me bhejta
-hai aur har message par *"part 1"*, *"part 2"* likh deta hai.
+Har baar sirf *nayi puri hui* societies jaati hain, purani dobara nahi. Saari societies ek
+saath nahi ja sakti kyunki WhatsApp lamba message kaat deta hai. Tool khud hi tukdon me
+bhejta hai aur har message par *"part 1"*, *"part 2"* likh deta hai.
+
+*Tool khud yaad dilayega* 🔔
+Agar koi society bhejni baaki reh gayi, to upar *peela warning* dikhega —
+*"⚠️ 12 society bhejni baaki hai"* — aur neeche wala *green button peela ho jayega* aur us
+par likha hoga *"Submit — 12 baaki hai"*.
+
+*Jab tak wo peela dikh raha hai, kaam poora nahi hua.* Submit dobara dabate rahiye jab tak
+wo hat na jaye. WhatsApp band karke wapas aaoge tab bhi wo peela wahi rahega, isliye bhoolne
+ka darr nahi hai.
 
 ⚠️ *Har message ke aakhir me "khatam, 4 society" likha hona chahiye.* Agar wo line nahi
 dikhi, to message adhoora gaya hai — mujhe bata dijiye.

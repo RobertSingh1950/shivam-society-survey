@@ -48,6 +48,13 @@
   .toast { position: fixed; bottom: 84px; left: 50%; transform: translateX(-50%); background: #2ea86f; color: #04120a; padding: 10px 18px; border-radius: 8px; font-weight: 700; display: none; z-index: 9; max-width: 90%; text-align: center; }
   .foot { margin: 24px 0 0; font-size: 12.5px; color: #6d7688; }
   .foot a { color: #9aa3b2; }
+  /* Sticky, not a toast. A toast is gone in two seconds and Submit sends you to WhatsApp,
+     so by the time you come back there is nothing left telling you more is pending. */
+  .pend { display: none; position: sticky; top: 34px; z-index: 5; background: #3a2a12;
+    border: 1px solid #d9a441; border-radius: 10px; padding: 11px 13px; margin-bottom: 12px;
+    font-size: 13.5px; color: #ffd98a; font-weight: 600; }
+  .pend.on { display: block; }
+  .btn-wa.more { background: #d9a441; color: #1a1204; }
 </style>
 </head>
 <body>
@@ -67,6 +74,7 @@
 </div>
 
 <div class="progress" id="progress"></div>
+<div class="pend" id="pend"></div>
 <div class="grid" id="grid"></div>
 
 <p class="foot">Photo wala tool alag hai:
@@ -91,7 +99,11 @@ var SOCIETIES = [
   { n: 'Terra Elegance', k: 'flat' },
   { n: 'Terra Heritage', k: 'flat' },
   { n: 'Terra Castle', k: 'flat' },
-  { n: 'Omaxe Medocity', k: 'plot' },
+  // 'Omaxe Medocity' was carried over from the photo tool and is dropped (owner, 13 Aug
+  // 2026: "Omaxe Green Meadow City is main"). It was never an Omaxe product name: the
+  // 4 August audit checked Omaxe's own Bhiwadi list and found Panorama City, Green Meadow
+  // City, Marigold, Sunrise and Europia, with no Medocity anywhere. The website already
+  // 301s /projects/omaxe-medocity/ to /projects/omaxe-green-meadow-city/.
   { n: 'Omaxe Green Meadow City', k: 'plot' },
   { n: 'Omaxe Panorama City', k: 'plot' },
   { n: 'VBHC', k: 'plot', z: 'Honda zone' },
@@ -249,8 +261,27 @@ function refresh() {
     card.querySelector('.cnt').textContent = s.sent ? 'bhej diya' : filled + '/' + core(soc).length;
     if (d) { done++; if (!s.sent) unsent++; }
   });
-  document.getElementById('progress').textContent =
-    done + ' / ' + SOCIETIES.length + ' society done' + (unsent ? '  ·  ' + unsent + ' bhejni baaki hai' : '');
+  document.getElementById('progress').textContent = done + ' / ' + SOCIETIES.length + ' society done';
+
+  // Persistent reminder that something is still unsent. Submit opens WhatsApp, which takes
+  // the person off this page, so a toast has always disappeared by the time they return.
+  // This banner and the button label survive that round trip, and both come back on reload.
+  var howMany = nextBatch();
+  var pend = document.getElementById('pend');
+  var btn = document.getElementById('sendBtn');
+  if (unsent > 0) {
+    var rest = unsent - howMany.batch.length;
+    pend.className = 'pend on';
+    pend.textContent = rest > 0
+      ? '⚠️ ' + unsent + ' society bhejni baaki hai. Ek message me sab nahi jaati, isliye niche green Submit ' + Math.ceil(unsent / Math.max(howMany.batch.length, 1)) + ' baar dabana padega.'
+      : '⚠️ ' + unsent + ' society bhejni baaki hai. Niche green Submit dabaiye.';
+    btn.textContent = '✅ Submit — ' + unsent + ' baaki hai';
+    btn.className = 'btn btn-wa more';
+  } else {
+    pend.className = 'pend';
+    btn.textContent = '✅ Submit — WhatsApp pe bhejo';
+    btn.className = 'btn btn-wa';
+  }
   return unsent;
 }
 

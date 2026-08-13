@@ -104,6 +104,14 @@ yet", which is how three societies disappeared on 11 August. The counter lives i
 **For a big batch, use Copy.** The clipboard has no URL limit, so 📋 Copy takes every
 pending society at once and cannot truncate. Submit is convenient; Copy is safe.
 
+**Anything unsent shows in a sticky banner and on the Submit button itself**, not in a
+toast. This matters because Submit opens WhatsApp, which takes the person off the page
+entirely; a toast has always expired by the time they come back, so the only signal that
+more was pending vanished at exactly the moment it was needed. The banner reads
+`⚠️ 12 society bhejni baaki hai` with how many more presses it will take, the button reads
+`Submit — 12 baaki hai` and turns amber, and both are rebuilt by `refresh()` on load, so
+they survive closing the tab. Both clear only when nothing is left to send.
+
 ## Filing the replies
 
 Paste each reply into `docs/ops/templates/society-intake.csv` in the website repo, one row
@@ -133,8 +141,12 @@ Evidence tier follows what the message says about how it was found:
   field reply lands in one thread. Deliberately NOT the public business number in the
   website's `src/config.ts`: this is internal data going to the owner, not an enquiry going
   to the sales line.
-- **Open question for the owner:** the list carries both `Omaxe Medocity` (from the photo
-  tool) and `Omaxe Green Meadow City` (from `projects.json`). These may be the same township
-  under two names. Confirm and drop one.
+- **`Omaxe Medocity` is gone, resolved 13 August 2026.** Owner: *"Omaxe Green Meadow City is
+  main."* The name came over from the photo tool and was never an Omaxe product: the 4 August
+  audit checked Omaxe's own Bhiwadi list (Panorama City, Green Meadow City, Marigold,
+  Sunrise, Europia) and found no Medocity. The website already 301s
+  `/projects/omaxe-medocity/` to `/projects/omaxe-green-meadow-city/`. The photo tool's
+  `PROJECTS` array still offers the old name, so photos can still be labelled with it until
+  that list is updated too.
 - The page is `noindex, nofollow`. It is a staff tool and must never be linked from
   propertydealersinbhiwadi.com.
