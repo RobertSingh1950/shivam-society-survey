@@ -44,7 +44,7 @@
   .bar { position: fixed; left: 0; right: 0; bottom: 0; background: #141922; border-top: 1px solid #262c38; padding: 12px 14px; display: flex; gap: 10px; }
   .btn { flex: 1; padding: 13px 10px; border: 0; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; text-align: center; text-decoration: none; font-family: inherit; }
   .btn-wa { background: #25d366; color: #06280f; }
-  .btn-copy { background: #2a3140; color: #e8eaf0; flex: 0 0 92px; }
+  .btn-copy { background: #2a3140; color: #e8eaf0; }
   .toast { position: fixed; bottom: 84px; left: 50%; transform: translateX(-50%); background: #2ea86f; color: #04120a; padding: 10px 18px; border-radius: 8px; font-weight: 700; display: none; z-index: 9; max-width: 90%; text-align: center; }
   .foot { margin: 24px 0 0; font-size: 12.5px; color: #6d7688; }
   .foot a { color: #9aa3b2; }
@@ -59,6 +59,13 @@
      stays rare enough to be read rather than scrolled past. */
   .rc { background: #3a2a12; border: 1px solid #d9a441; border-radius: 9px;
     padding: 10px 12px; margin-bottom: 12px; font-size: 13px; color: #ffd98a; line-height: 1.45; }
+  /* Each society sends itself. One message per society can never be truncated, and the
+     button sits where the answers are, so there is nothing to hunt for at the bottom. */
+  .send { width: 100%; margin-top: 16px; padding: 13px 10px; border: 0; border-radius: 10px;
+    font-size: 15px; font-weight: 700; font-family: inherit; cursor: pointer;
+    background: #25d366; color: #06280f; }
+  .send:disabled { background: #2a3140; color: #6d7688; cursor: default; }
+  .send.done { background: #2a3140; color: #9aa3b2; }
 </style>
 </head>
 <body>
@@ -88,8 +95,7 @@ taaki sirf bacha hua kaam saamne rahe. Unka data safe hai, kuch dobara nahi bhar
 
 <div class="bar">
   <button type="button" class="btn btn-copy" id="saveBtn">💾 Save</button>
-  <button type="button" class="btn btn-copy" id="copyBtn">📋 Copy</button>
-  <a class="btn btn-wa" id="sendBtn" href="#">✅ Submit — WhatsApp pe bhejo</a>
+  <button type="button" class="btn btn-copy" id="copyBtn">📋 Sab copy karo</button>
 </div>
 <div class="toast" id="toast"></div>
 
@@ -288,6 +294,7 @@ SHOWN.forEach(function (soc) {
       '<div class="r2"><div class="r2h">Extra (zaroori nahi)</div>' +
       '<div class="r2n">Bhare bina bhi society poori ginti hai.</div>' +
       EXTRA.map(function (q) { return field(soc, q); }).join('') + '</div>' +
+      '<button type="button" class="send" data-send="' + esc(soc.n) + '"></button>' +
     '</div>';
   grid.appendChild(card);
 });
@@ -317,6 +324,12 @@ function refresh() {
     var filled = core(soc).filter(function (q) { return (val(soc, q.id) || '').trim() !== ''; }).length;
     card.querySelector('.cnt').textContent = s.sent ? 'bhej diya' : filled + '/' + core(soc).length;
     if (d) { done++; if (!s.sent) unsent++; }
+    var sb = card.querySelector('.send');
+    sb.disabled = !d;
+    sb.className = 'send' + (d && s.sent ? ' done' : '');
+    sb.textContent = !d ? 'Pehle saare jawab bhariye'
+      : s.sent ? '✅ Bhej diya — dobara bhejna ho to dabaiye'
+      : '✅ Ye society WhatsApp pe bhejo';
   });
   document.getElementById('progress').textContent = SHOWN.length
     ? done + ' / ' + SHOWN.length + ' society done' +
@@ -326,21 +339,11 @@ function refresh() {
   // Persistent reminder that something is still unsent. Submit opens WhatsApp, which takes
   // the person off this page, so a toast has always disappeared by the time they return.
   // This banner and the button label survive that round trip, and both come back on reload.
-  var howMany = nextBatch();
   var pend = document.getElementById('pend');
-  var btn = document.getElementById('sendBtn');
+  pend.className = unsent > 0 ? 'pend on' : 'pend';
   if (unsent > 0) {
-    var rest = unsent - howMany.batch.length;
-    pend.className = 'pend on';
-    pend.textContent = rest > 0
-      ? '⚠️ ' + unsent + ' society bhejni baaki hai. Ek message me sab nahi jaati, isliye niche green Submit ' + Math.ceil(unsent / Math.max(howMany.batch.length, 1)) + ' baar dabana padega.'
-      : '⚠️ ' + unsent + ' society bhejni baaki hai. Niche green Submit dabaiye.';
-    btn.textContent = '✅ Submit — ' + unsent + ' baaki hai';
-    btn.className = 'btn btn-wa more';
-  } else {
-    pend.className = 'pend';
-    btn.textContent = '✅ Submit — WhatsApp pe bhejo';
-    btn.className = 'btn btn-wa';
+    pend.textContent = '⚠️ ' + unsent + ' society bhejni baaki hai. Society khol ke, sabse ' +
+      'niche wala green button dabaiye. Ek baar me ek society jaati hai.';
   }
   return unsent;
 }
@@ -406,25 +409,10 @@ document.addEventListener('change', function (e) {
   }
 });
 
-// What travels is the percent-encoded wa.me URL, not the message, and encoding inflates it
-// by ~1.6x in Hinglish and ~7.8x in Devanagari. The message that silently truncated on
-// 11 August 2026 was ~15,400 encoded characters. Capping the raw message was measuring the
-// wrong string. Tokens made the answers small enough that this rarely splits at all now,
-// but the guard stays: a silent truncation still looks exactly like a successful send.
-var MAX_URL = 3500;
-var TAG_SAMPLE = '  (part 99 · 9 society)';
-function urlLen(msg) { return encodeURIComponent(msg).length + 30; }
-
-function nextBatch() {
-  var all = pending(), batch = [];
-  for (var i = 0; i < all.length; i++) {
-    var trial = batch.concat([all[i]]);
-    if (batch.length && urlLen(buildMessage(trial, TAG_SAMPLE)) > MAX_URL) break;
-    batch = trial;
-  }
-  return { batch: batch, left: all.length - batch.length };
-}
-
+// One society per message, so the batching that caused the 11 August truncation is gone
+// along with the character caps that tried to manage it. A single society encodes to a few
+// hundred characters, nowhere near any practical wa.me limit, and it cannot silently lose
+// half a society the way a packed message could.
 function pending() {
   return SOCIETIES.filter(function (soc) { return isDone(soc) && !(state[soc.n] || {}).sent; });
 }
@@ -468,19 +456,24 @@ function toast(msg) {
   setTimeout(function () { t.style.display = 'none'; }, 2600);
 }
 
-document.getElementById('sendBtn').addEventListener('click', function (e) {
-  e.preventDefault();
-  var r = nextBatch();
-  if (!r.batch.length) { toast('Koi nayi puri society nahi hai'); return; }
+// One society per tap. The button lives in that society's own card, so there is no batch to
+// reason about, no second press to remember, and nothing that can look sent while half of it
+// never left the phone. Sending an already-sent society again is allowed on purpose: a
+// message that failed to go out on a flaky connection has to be repeatable.
+document.addEventListener('click', function (e) {
+  var b = e.target.closest ? e.target.closest('.send') : null;
+  if (!b || b.disabled) return;
+  var name = b.dataset.send;
+  var soc = SOCIETIES.filter(function (x) { return x.n === name; })[0];
+  if (!soc) return;
   var part = (parseInt(localStorage.getItem(PART_KEY) || '0', 10) || 0) + 1;
   localStorage.setItem(PART_KEY, String(part));
-  var msg = buildMessage(r.batch, '  (part ' + part + ' · ' + r.batch.length + ' society)');
-  r.batch.forEach(function (soc) { put(soc.n, function (s) { s.sent = true; }); });
+  put(name, function (st) { st.sent = true; });
   refresh();
-  window.open('https://wa.me/' + VIKAS_WA + '?text=' + encodeURIComponent(msg), '_blank');
-  toast(r.left > 0
-    ? r.batch.length + ' bheji ✅  ' + r.left + ' aur baaki, dobara Submit dabao'
-    : r.batch.length + ' society bhej di ✅');
+  window.open('https://wa.me/' + VIKAS_WA + '?text=' +
+    encodeURIComponent(buildMessage([soc], '  (' + part + ')')), '_blank');
+  var left = pending().length;
+  toast(left ? name + ' bhej di ✅  ' + left + ' aur baaki' : name + ' bhej di ✅  sab ho gaya');
 });
 
 document.getElementById('saveBtn').addEventListener('click', function () {
@@ -491,7 +484,7 @@ document.getElementById('saveBtn').addEventListener('click', function () {
 // Clipboard has no URL limit, so Copy takes everything at once and cannot truncate.
 document.getElementById('copyBtn').addEventListener('click', function () {
   var list = pending();
-  var msg = buildMessage(list.length ? list : SHOWN.filter(isDone));
+  var msg = buildMessage(list.length ? list : SHOWN.filter(isDone), '  (sab)');
   if (navigator.clipboard) {
     navigator.clipboard.writeText(msg).then(function () { toast('Copy ho gaya ✅ WhatsApp me paste kar dijiye'); },
       function () { toast('Copy nahi hua'); });
