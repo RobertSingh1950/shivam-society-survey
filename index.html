@@ -66,7 +66,9 @@
 <h1>🏢 Shivam Properties — Society Details</h1>
 <p class="sub">Sanjay ji, har society ke baare mein kuch baatein chahiye. Zyada tar sirf
 <b>list mein se choose karna hai</b>, likhna nahi padega. Jo pata nahi hai uspar
-<b>"pata nahi"</b> choose kar dijiye. Sab kuch <b>apne aap save hota rehta hai</b>. 👍</p>
+<b>"pata nahi"</b> choose kar dijiye. Sab kuch <b>apne aap save hota rehta hai</b>. 👍
+<br><br>Jo society aap pehle bhar ke bhej chuke hain wo <b>list se hata di gayi hain</b>,
+taaki sirf bacha hua kaam saamne rahe. Unka data safe hai, kuch dobara nahi bharna.</p>
 
 <div class="note">
   <b>Andaaza mat lagaiye.</b> "Pata nahi" bharna galti nahi hai, hum website par saaf likh
@@ -257,7 +259,17 @@ function field(soc, q) {
   return h + '<select class="' + (v && v !== ASK ? 'set' : '') + '" data-soc="' + esc(soc.n) + '" data-q="' + q.id + '">' + opts + '</select>' + other;
 }
 
-SOCIETIES.forEach(function (soc) {
+// Show only what still needs work. A society that is complete, already sent and carries no
+// re-check note is hidden, not deleted: its answers stay in localStorage untouched and it
+// reappears the moment anything reopens it. Twenty-one green cards to scroll past is how a
+// re-check gets missed. Computed once at load, so a card never vanishes under his thumb
+// while he is still filling it in.
+var SHOWN = SOCIETIES.filter(function (soc) {
+  return soc.r || !isDone(soc) || !(state[soc.n] || {}).sent;
+});
+var HIDDEN = SOCIETIES.length - SHOWN.length;
+
+SHOWN.forEach(function (soc) {
   var s = state[soc.n] || {};
   var card = document.createElement('details');
   card.className = 'card';
@@ -280,6 +292,14 @@ SOCIETIES.forEach(function (soc) {
   grid.appendChild(card);
 });
 
+// Everything done and sent. Say so rather than showing an empty page, which reads as a
+// broken tool.
+if (!SHOWN.length) {
+  grid.innerHTML = '<div class="note"><b>Sab ho gaya 🙏</b><br>Saari ' + HIDDEN +
+    ' society bhar ke bhej di gayi hain. Abhi kuch karna baaki nahi hai. ' +
+    'Koi nayi society aayegi to yahin dikhegi.</div>';
+}
+
 // Done when every core question has an answer, and "pata nahi" counts as one. Half-filled
 // does not tick, so the counter drives the list to completion rather than rewarding a start.
 function isDone(soc) {
@@ -289,7 +309,7 @@ function isDone(soc) {
 function refresh() {
   var done = 0, unsent = 0;
   document.querySelectorAll('.card').forEach(function (card, i) {
-    var soc = SOCIETIES[i];
+    var soc = SHOWN[i];
     var s = state[soc.n] || {};
     var d = isDone(soc);
     card.classList.toggle('done', d);
@@ -298,7 +318,10 @@ function refresh() {
     card.querySelector('.cnt').textContent = s.sent ? 'bhej diya' : filled + '/' + core(soc).length;
     if (d) { done++; if (!s.sent) unsent++; }
   });
-  document.getElementById('progress').textContent = done + ' / ' + SOCIETIES.length + ' society done';
+  document.getElementById('progress').textContent = SHOWN.length
+    ? done + ' / ' + SHOWN.length + ' society done' +
+      (HIDDEN ? '   ·   ' + HIDDEN + ' pehle ho chuki hain, chhupa di' : '')
+    : 'Sab ho gaya ✅  ' + HIDDEN + ' society ho chuki hain';
 
   // Persistent reminder that something is still unsent. Submit opens WhatsApp, which takes
   // the person off this page, so a toast has always disappeared by the time they return.
@@ -468,7 +491,7 @@ document.getElementById('saveBtn').addEventListener('click', function () {
 // Clipboard has no URL limit, so Copy takes everything at once and cannot truncate.
 document.getElementById('copyBtn').addEventListener('click', function () {
   var list = pending();
-  var msg = buildMessage(list.length ? list : SOCIETIES.filter(isDone));
+  var msg = buildMessage(list.length ? list : SHOWN.filter(isDone));
   if (navigator.clipboard) {
     navigator.clipboard.writeText(msg).then(function () { toast('Copy ho gaya ✅ WhatsApp me paste kar dijiye'); },
       function () { toast('Copy nahi hua'); });
