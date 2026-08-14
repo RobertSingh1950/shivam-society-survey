@@ -55,6 +55,10 @@
     font-size: 13.5px; color: #ffd98a; font-weight: 600; }
   .pend.on { display: block; }
   .btn-wa.more { background: #d9a441; color: #1a1204; }
+  /* Per-society re-check note. Only on the societies where two rounds disagreed, so it
+     stays rare enough to be read rather than scrolled past. */
+  .rc { background: #3a2a12; border: 1px solid #d9a441; border-radius: 9px;
+    padding: 10px 12px; margin-bottom: 12px; font-size: 13px; color: #ffd98a; line-height: 1.45; }
 </style>
 </head>
 <body>
@@ -92,12 +96,12 @@
 var VIKAS_WA = '918570009071';
 
 var SOCIETIES = [
-  { n: 'MVL Coral', k: 'flat' },
+  { n: 'MVL Coral', k: 'flat', r: 'NOC ka charge lagta hai ya bilkul nahi? Do baar do jawab aaye. Aur ek baar khud jaakar dekh aaiye, tab website par "humne khud dekha" likh sakte hain.' },
   { n: 'HFL Presidency Estate', k: 'flat' },
-  { n: 'Cosmos', k: 'flat' },
-  { n: 'Essentia', k: 'flat' },
+  { n: 'Cosmos', k: 'flat', r: 'Maintenance ₹2 hai ya ₹2.25 per sq ft? Dono jawab aaye hain, isliye abhi website par rate nahi likha.' },
+  { n: 'Essentia', k: 'flat', r: 'Maintenance ₹2 hai ya ₹2.25 per sq ft? Dono jawab aaye hain, isliye abhi website par rate nahi likha.' },
   { n: 'Terra Elegance', k: 'flat' },
-  { n: 'Terra Heritage', k: 'flat' },
+  { n: 'Terra Heritage', k: 'flat', r: 'Club house khul gaya hai ya abhi ban raha hai? Do baar do jawab aaye.' },
   { n: 'Terra Castle', k: 'flat' },
   // 'Omaxe Medocity' was carried over from the photo tool and is dropped (owner, 13 Aug
   // 2026: "Omaxe Green Meadow City is main"). It was never an Omaxe product name: the
@@ -106,13 +110,13 @@ var SOCIETIES = [
   // 301s /projects/omaxe-medocity/ to /projects/omaxe-green-meadow-city/.
   { n: 'Omaxe Green Meadow City', k: 'plot' },
   { n: 'Omaxe Panorama City', k: 'plot' },
-  { n: 'VBHC', k: 'plot', z: 'Honda zone' },
-  { n: 'Krish Season', k: 'plot', z: 'Honda zone' },
-  { n: 'Ekta Enclave', k: 'plot' },
-  { n: 'Aqasia Homes', k: 'plot' },
-  { n: 'Terra City', k: 'plot' },
-  { n: 'Lifestyle City', k: 'plot' },
-  { n: 'Chanderlok City', k: 'plot' },
+  { n: 'VBHC', k: 'plot', z: 'Honda zone', r: 'HDFC ke alawa kaun sa bank? Ek baar SBI aaya tha, ek baar ICICI. Maintenance kitna hai aur kaun leta hai?' },
+  { n: 'Krish Season', k: 'plot', z: 'Honda zone', r: 'RWA bani hai ya nahi? Ek baar "nahi bani" aaya, ek baar "registered hai". HDFC ke alawa kaun sa bank?' },
+  { n: 'Ekta Enclave', k: 'plot', r: 'BIDA ko handover ho gaya, ya abhi builder ke paas hai? Do baar do jawab aaye. Maintenance koi leta bhi hai ya nahi?' },
+  { n: 'Aqasia Homes', k: 'plot', r: 'Sewer bana hai ya nahi? Pichli baar sirf sadak aur paani tick hua tha.' },
+  { n: 'Terra City', k: 'plot', r: 'Maintenance ₹5 per gaj hai ya ₹2 per sq ft? Chanderlok ka jawab ulta aaya hai, dhyan se dekh lijiye kahin dono aapas me badal to nahi gaye.' },
+  { n: 'Lifestyle City', k: 'plot', r: 'SBI yahan loan deta hai ya mana karta hai? Pichli baar "mana karta hai" aaya tha, is baar SBI list me hai. Ye website se hata diya hai jab tak confirm na ho. Maintenance kaun leta hai?' },
+  { n: 'Chanderlok City', k: 'plot', r: 'Maintenance kitna, kaun leta hai, RWA registered hai ya sirf committee? Teeno jawab pichli baar se ulte aaye. Terra City se compare kar lijiye.' },
   { n: 'Reverence (Ashadeep)', k: 'plot' },
   { n: 'MGH Anandam', k: 'plot', z: 'Dharuhera' },
   { n: 'AMD City', k: 'plot', z: 'Dharuhera' },
@@ -150,9 +154,19 @@ var CORE = [
   { id: 'bank', l: 'Kaun se bank loan dete hain?', t: 'many',
     v: [DK, 'SBI', 'HDFC', 'ICICI', 'PNB', 'Axis', 'koi bank nahi deta'] }
 ];
+// Three single-choice questions, not one multi-select. Learned on 14 August 2026: 'serv'
+// was 'many' with two mutually exclusive pairs inside it (24 ghante / subah shaam, and lift
+// theek / lift kharab). Three societies came back with both halves of a pair ticked, so
+// their whole services answer was unusable and none of it could be published. A multi-select
+// also cannot record a negative: an unticked "backup chalta hai" might mean the backup is
+// dead or might mean he skipped the row, and there is no way to tell them apart afterwards.
 var FLAT = [
-  { id: 'serv', l: 'Kya kya theek chal raha hai?', t: 'many',
-    v: [DK, 'paani 24 ghante', 'paani subah shaam', 'backup chalta hai', 'lift theek hai', 'lift kharab hai'] },
+  { id: 'water', l: 'Paani kitne ghante aata hai?', t: 'one',
+    v: [DK, 'paani 24 ghante', 'paani subah shaam', 'paani ki dikkat hai'] },
+  { id: 'backup', l: 'Power backup?', t: 'one',
+    v: [DK, 'backup chalta hai', 'backup hai par chalta nahi', 'backup hai hi nahi'] },
+  { id: 'lift', l: 'Lift ka kya haal hai?', t: 'one',
+    v: [DK, 'lift theek hai', 'lift kharab hai'] },
   { id: 'club', l: 'Club house / pool / park?', t: 'one',
     v: [DK, 'khula hai, chal raha hai', 'abhi ban raha hai', 'hai hi nahi'] }
 ];
@@ -187,6 +201,28 @@ var KEY = 'shivam-society-facts-v3';
 var PART_KEY = 'shivam-society-part';
 var state = {};
 try { state = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) { state = {}; }
+
+// Migration for the flat services split, 14 August 2026. Everything already filled is
+// carried across so no society drops out of the done count, EXCEPT where both halves of a
+// contradictory pair were ticked. Those are deliberately left blank: the society reopens as
+// incomplete and he re-answers that one row, which is the whole point of the split.
+// Flats only: a plotted township's 'serv' is a different list and must not be touched.
+SOCIETIES.filter(function (s) { return s.k !== 'plot'; }).forEach(function (soc) {
+  var a = (state[soc.n] || {}).a; if (!a || !a.serv) return;
+  var had = a.serv.split(', ');
+  var pick = function (yes, no) {
+    var y = had.indexOf(yes) >= 0, x = had.indexOf(no) >= 0;
+    return y && x ? '' : y ? yes : x ? no : '';
+  };
+  a.water = pick('paani 24 ghante', 'paani subah shaam');
+  a.lift = pick('lift theek hai', 'lift kharab hai');
+  a.backup = had.indexOf('backup chalta hai') >= 0 ? 'backup chalta hai' : '';
+  delete a.serv;
+  // Only the ones left with a hole need resending; a clean carry-across is already filed.
+  if (!a.water || !a.lift || !a.backup) state[soc.n].sent = false;
+});
+localStorage.setItem(KEY, JSON.stringify(state));
+
 var grid = document.getElementById('grid');
 
 function core(soc) {
@@ -231,6 +267,7 @@ SOCIETIES.forEach(function (soc) {
       '<span class="cnt"></span><span class="tick">✅</span>' +
     '</summary>' +
     '<div class="body">' +
+      (soc.r ? '<div class="rc">🔁 <b>Ye ek baar phir se check kar lijiye:</b> ' + esc(soc.r) + '</div>' : '') +
       '<div class="meta">' +
         '<label class="chip' + (s.visited ? ' on' : '') + '"><input type="checkbox" data-soc="' + esc(soc.n) + '" data-meta="visited"' + (s.visited ? ' checked' : '') + '>main khud gaya tha</label>' +
         '<label class="chip' + (s.office ? ' on' : '') + '"><input type="checkbox" data-soc="' + esc(soc.n) + '" data-meta="office"' + (s.office ? ' checked' : '') + '>office / guard se pucha</label>' +
@@ -308,6 +345,16 @@ document.addEventListener('change', function (e) {
     el.className = v ? 'set' : '';
     var box = el.parentNode.querySelector('.other[data-q="' + d.q + '__o"]');
     if (box) box.style.display = v === 'koi aur' ? 'block' : 'none';
+    // "Nobody collects" and a rupee figure are asked as two questions and came back
+    // together twice on 14 August 2026, which left the whole dimension unpublishable.
+    // Answering either one now sets the other, so the pair cannot disagree.
+    var twin = d.q === 'mwho' && v === 'koi nahi leta' ? ['maint', 'koi nahi le raha']
+      : d.q === 'maint' && v === 'koi nahi le raha' ? ['mwho', 'koi nahi leta'] : null;
+    if (twin) {
+      put(d.soc, function (s) { s.a[twin[0]] = twin[1]; });
+      var sel = el.closest('.body').querySelector('select[data-q="' + twin[0] + '"]');
+      if (sel) { sel.value = twin[1]; sel.className = 'set'; }
+    }
     refresh();
   } else if (d.many) {
     put(d.soc, function (s) {
@@ -387,7 +434,8 @@ function buildMessage(list, tag) {
 
 // Short keys keep the message compact and are what the filing side matches on.
 var SHORT = { maint: 'maint', mwho: 'kaun', rwa: 'RWA', noct: 'NOC time', nocc: 'NOC charge',
-  bank: 'bank', serv: 'services', club: 'club', hand: 'handover', year: 'possession',
+  bank: 'bank', serv: 'services', water: 'paani', backup: 'backup', lift: 'lift',
+  club: 'club', hand: 'handover', year: 'possession',
   stock: 'stock', loc: 'jagah', rent: 'kiraya', more: 'aur' };
 function short(id) { return SHORT[id] || id; }
 
