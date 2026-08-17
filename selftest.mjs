@@ -82,4 +82,29 @@ const api = (s) => load(s);
   assert.match(buildMessage([SOCIETIES.find((x) => x.n === 'Cosmos')]), /maint: PATA NAHI/);
 }
 
-console.log('selftest: 4 checks passed');
+// 5. The eleven societies we do not sell in (added 17 August 2026) are ordinary rows, not a
+// special case. They carry `x` only so the card can say "nayi" and skip the "what we already
+// have" note, and a flag that the message builder silently ignored would mean a whole round
+// of answers arriving unlabelled.
+{
+  const { SOCIETIES } = api({});
+  const fresh = SOCIETIES.filter((x) => x.x);
+  assert.equal(fresh.length, 11, 'eleven societies were added on 17 Aug 2026');
+  assert.ok(fresh.every((x) => x.k === 'flat' || x.k === 'plot'),
+    'every society needs a kind, or core() hands it the wrong question set');
+  assert.ok(fresh.every((x) => !x.r),
+    'a new society has no prior data, so a "what we already have" note would be a lie');
+
+  const names = SOCIETIES.map((x) => x.n);
+  assert.equal(new Set(names).size, names.length, 'a duplicate name would overwrite its twin in state');
+
+  // It has to survive the round trip, exactly like a society we do sell in.
+  const s = { 'Nimai Greens': { visited: true, a: { maint: '₹2 per sq ft', rwa: 'pata nahi' } } };
+  const api2 = api(s);
+  const msg = api2.buildMessage([api2.SOCIETIES.find((x) => x.n === 'Nimai Greens')]);
+  assert.match(msg, /\*Nimai Greens\*/, 'a new society must appear in the message by name');
+  assert.match(msg, /maint: ₹2 per sq ft/);
+  assert.match(msg, /RWA: PATA NAHI/, 'an unknown on a new society is still a first-class answer');
+}
+
+console.log('selftest: 5 checks passed');

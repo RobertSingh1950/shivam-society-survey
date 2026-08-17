@@ -78,6 +78,22 @@
 taaki sirf bacha hua kaam saamne rahe. Unka data safe hai, kuch dobara nahi bharna.</p>
 
 <div class="note">
+  <b>17 August ko website ka bahut sa data hata diya gaya hai.</b> Jo aapne 11 August ko
+  bheja tha wo poora safe hai aur website par hai. Uske baad jo data aaya tha wo humne khud
+  nahi dekha tha, isliye hata diya. Har card par likha hai ki us society ka <b>kya pehle se
+  hai</b> aur <b>kya khaali hai</b>, taaki wahi kaam ho jo bacha hai.
+  <br><br>
+  Ye char cheezein <b>ab har society mein khaali hain</b>, in par sabse zyada zaroorat hai:
+  <b>bank loan</b>, <b>transfer / NOC</b>, <b>possession kab mili</b>, aur <b>society kahan
+  par hai</b>.
+  <br><br>
+  🆕 List ke aakhir mein <b>gyarah nayi societies</b> jodi gayi hain. Ab hum Bhiwadi ki
+  <b>har society cover kar rahe hain</b>, taaki koi naam chhoot na jaaye. Jo aapko sach
+  mein pata ho wahi bhariye; <b>ek society jo aap achhe se jaante hain, chhe aadhi-adhuri
+  se behtar hai.</b>
+</div>
+
+<div class="note">
   <b>Andaaza mat lagaiye.</b> "Pata nahi" bharna galti nahi hai, hum website par saaf likh
   dete hain ki ye humne confirm nahi kiya. Lekin ek galat baat website par gayi to customer
   ka bharosa jaata hai.
@@ -103,33 +119,74 @@ taaki sirf bacha hua kaam saamne rahe. Unka data safe hai, kuch dobara nahi bhar
 // Owner's WhatsApp. Same number the photo tool sends to, so everything lands in one place.
 var VIKAS_WA = '918570009071';
 
+// Rebuilt 17 August 2026 against the website's real data, after 105 of the 127 findings in
+// projects.json were deleted. Those had been stored as tier B, "humne khud dekha", but
+// nineteen societies were not visited on 14 August: they were generated, not observed, and
+// the pages were printing "Verified by us on site" over them. Only the 22 findings from the
+// 11 August partner round survived.
+//
+// So the old reminders here are gone. Every one of them described a CONFLICT between two
+// earlier answers, and one side of nearly every conflict was the invented data. Asking
+// Sanjay ji to settle a contradiction that no longer exists would waste the round.
+//
+// Each `r` below now says only two things: what the website already holds from him (so he
+// does not collect it twice), and what is genuinely still empty. Derived from
+// projects.json, not from memory.
+//
+// UNIVERSAL GAPS, true for every society, so they are in the header note instead of being
+// repeated on all 32 cards: bank loan, transfer/NOC, possession year, and location.
 var SOCIETIES = [
-  { n: 'MVL Coral', k: 'flat', r: 'NOC ka charge lagta hai ya bilkul nahi? Do baar do jawab aaye. Aur ek baar khud jaakar dekh aaiye, tab website par "humne khud dekha" likh sakte hain.' },
-  { n: 'HFL Presidency Estate', k: 'flat' },
-  { n: 'Cosmos', k: 'flat', r: 'Maintenance ₹2 hai ya ₹2.25 per sq ft? Dono jawab aaye hain, isliye abhi website par rate nahi likha.' },
-  { n: 'Essentia', k: 'flat', r: 'Maintenance ₹2 hai ya ₹2.25 per sq ft? Dono jawab aaye hain, isliye abhi website par rate nahi likha.' },
-  { n: 'Terra Elegance', k: 'flat' },
-  { n: 'Terra Heritage', k: 'flat', r: 'Club house khul gaya hai ya abhi ban raha hai? Do baar do jawab aaye.' },
-  { n: 'Terra Castle', k: 'flat' },
+  // ── Flats ────────────────────────────────────────────────────────────────────
+  { n: 'MVL Coral', k: 'flat', r: 'Maintenance (₹2 per sq ft, RWA) aur paani/light/lift website par aa chuka hai, dobara mat bhariye. NOC ka time aur charge abhi khaali hai.' },
+  { n: 'HFL Presidency Estate', k: 'flat', r: 'Maintenance, transfer aur services aa chuke hain. Sabse zaroori: bank aur possession year.' },
+  { n: 'Cosmos', k: 'flat', r: 'Sirf paani/light/lift aaya tha. Maintenance kitna hai aur kaun leta hai, ye abhi website par nahi hai.' },
+  { n: 'Essentia', k: 'flat', r: 'Is society ka poora data hat gaya hai, website par abhi kuch nahi hai. Shuru se bhariye.' },
+  { n: 'Terra Elegance', k: 'flat', r: 'Maintenance ₹2.25 per sq ft aa chuka hai. Paani, light aur lift ka haal abhi khaali hai.' },
+  { n: 'Terra Heritage', k: 'flat', r: 'Maintenance (₹2.25, RWA 2024 se) aur paani/light aa chuke hain. Club house khula hai ya nahi, ye abhi bhi khaali hai.' },
+  { n: 'Terra Castle', k: 'flat', r: 'Maintenance (abhi koi nahi le raha) aur paani/light aa chuke hain. Baaki sab khaali.' },
+  // ── Plots ────────────────────────────────────────────────────────────────────
   // 'Omaxe Medocity' was carried over from the photo tool and is dropped (owner, 13 Aug
   // 2026: "Omaxe Green Meadow City is main"). It was never an Omaxe product name: the
   // 4 August audit checked Omaxe's own Bhiwadi list and found Panorama City, Green Meadow
   // City, Marigold, Sunrise and Europia, with no Medocity anywhere. The website already
   // 301s /projects/omaxe-medocity/ to /projects/omaxe-green-meadow-city/.
-  { n: 'Omaxe Green Meadow City', k: 'plot' },
+  { n: 'Omaxe Green Meadow City', k: 'plot', r: 'Is society ka poora data hat gaya hai. Shuru se bhariye.' },
   { n: 'Omaxe Panorama City', k: 'plot' },
-  { n: 'VBHC', k: 'plot', z: 'Honda zone', r: 'HDFC ke alawa kaun sa bank? Ek baar SBI aaya tha, ek baar ICICI. Maintenance kitna hai aur kaun leta hai?' },
-  { n: 'Krish Season', k: 'plot', z: 'Honda zone', r: 'RWA bani hai ya nahi? Ek baar "nahi bani" aaya, ek baar "registered hai". HDFC ke alawa kaun sa bank?' },
-  { n: 'Ekta Enclave', k: 'plot', r: 'BIDA ko handover ho gaya, ya abhi builder ke paas hai? Do baar do jawab aaye. Maintenance koi leta bhi hai ya nahi?' },
-  { n: 'Aqasia Homes', k: 'plot', r: 'Sewer bana hai ya nahi? Pichli baar sirf sadak aur paani tick hua tha.' },
-  { n: 'Terra City', k: 'plot', r: 'Maintenance ₹5 per gaj hai ya ₹2 per sq ft? Chanderlok ka jawab ulta aaya hai, dhyan se dekh lijiye kahin dono aapas me badal to nahi gaye.' },
-  { n: 'Lifestyle City', k: 'plot', r: 'SBI yahan loan deta hai ya mana karta hai? Pichli baar "mana karta hai" aaya tha, is baar SBI list me hai. Ye website se hata diya hai jab tak confirm na ho. Maintenance kaun leta hai?' },
-  { n: 'Chanderlok City', k: 'plot', r: 'Maintenance kitna, kaun leta hai, RWA registered hai ya sirf committee? Teeno jawab pichli baar se ulte aaye. Terra City se compare kar lijiye.' },
-  { n: 'Reverence (Ashadeep)', k: 'plot' },
-  { n: 'MGH Anandam', k: 'plot', z: 'Dharuhera' },
-  { n: 'AMD City', k: 'plot', z: 'Dharuhera' },
-  { n: 'Tulip City', k: 'plot', z: 'Dharuhera' },
-  { n: 'Dwarkadish', k: 'plot', z: 'Dharuhera' }
+  { n: 'VBHC', k: 'plot', z: 'Honda zone', r: 'Sirf itna hai ki BIDA ko handover ho chuka hai. Maintenance, RWA aur bank abhi khaali hain.' },
+  { n: 'Krish Season', k: 'plot', z: 'Honda zone', r: 'Sirf BIDA handover aaya hai. RWA bani hai ya nahi, maintenance kaun leta hai, bank kaun deta hai, teeno khaali.' },
+  { n: 'Ekta Enclave', k: 'plot', r: 'Is society ka poora data hat gaya hai. Handover BIDA ko hua ya builder ke paas hai, ye sabse pehle.' },
+  { n: 'Aqasia Homes', k: 'plot', r: 'Maintenance (naya project, koi nahi le raha) aur builder ke paas hona aa chuka hai. Sewer bana hai ya nahi, ye abhi bhi khaali hai.' },
+  { n: 'Terra City', k: 'plot', r: 'Sirf BIDA handover aaya hai. Maintenance kitna aur kaun leta hai, ye khaali hai. Chanderlok se compare kar lijiye.' },
+  { n: 'Lifestyle City', k: 'plot', r: 'Sirf itna hai ki abhi builder ke paas hai. Maintenance aur bank dono khaali hain.' },
+  { n: 'Chanderlok City', k: 'plot', r: 'Sirf BIDA handover aaya hai. Maintenance, RWA aur bank khaali. Terra City se compare kar lijiye.' },
+  { n: 'Reverence (Ashadeep)', k: 'plot', r: 'Maintenance (naya project) aur builder ke paas hona aa chuka hai. NOC ka time abhi khaali hai.' },
+  { n: 'MGH Anandam', k: 'plot', z: 'Dharuhera', r: 'Maintenance ₹7 per gaj aur DDJAY colony hona aa chuka hai. DTCP licence number chahiye.' },
+  { n: 'AMD City', k: 'plot', z: 'Dharuhera', r: 'Poora data hat gaya hai. DTCP licence number bhi chahiye.' },
+  { n: 'Tulip City', k: 'plot', z: 'Dharuhera', r: 'Poora data hat gaya hai. DTCP licence number bhi chahiye.' },
+  { n: 'Dwarkadish', k: 'plot', z: 'Dharuhera', r: 'Poora data hat gaya hai. DTCP licence number bhi chahiye.' },
+
+  // ── Bhiwadi ki baaki societies (owner, 17 Aug 2026) ─────────────────────────
+  // Added when the owner widened the map to cover every society in the belt: "we are going
+  // to cover everything, I don't want to miss any topic which can leave me behind the
+  // others." Do NOT label these as societies we do not work in. That category was retired
+  // the same day and the owner asked for the phrase to stop being used; every society here
+  // is one we cover, through our own stock or through the dealer network.
+  //
+  // They are grouped last only because we hold ZERO data on them, so there is nothing to
+  // pre-fill and no "what we already have" note to write. Each already shows up in Google
+  // under its own name at position 50 to 77, because the site currently mentions them only
+  // in passing. Whatever comes back here is the first thing the page will ever have.
+  { n: 'Nimai Greens', k: 'flat', x: true },
+  { n: 'Capital Greens', k: 'flat', x: true },
+  { n: 'Anand Lok', k: 'flat', x: true },
+  { n: 'Central Park', k: 'flat', x: true },
+  { n: 'RLF The Park', k: 'flat', x: true },
+  { n: 'BDI Sunshine City', k: 'flat', x: true },
+  { n: 'Vanshika Homes', k: 'flat', x: true },
+  { n: 'Mega County', k: 'plot', x: true },
+  { n: 'Trimurti Villas', k: 'plot', x: true },
+  { n: 'Avani Greens', k: 'flat', x: true },
+  { n: 'Satyam Housing', k: 'flat', x: true }
 ];
 
 // Rewritten 13 August 2026 in the photo tool's idiom. The previous version asked twelve
@@ -281,11 +338,22 @@ SHOWN.forEach(function (soc) {
   card.className = 'card';
   card.innerHTML =
     '<summary>' +
-      '<span class="nm">' + esc(soc.n) + (soc.z ? ' <span class="zone">' + esc(soc.z) + '</span>' : '') + '</span>' +
+      '<span class="nm">' + esc(soc.n) +
+        (soc.z ? ' <span class="zone">' + esc(soc.z) + '</span>' : '') +
+        (soc.x ? ' <span class="zone">nayi</span>' : '') + '</span>' +
       '<span class="cnt"></span><span class="tick">✅</span>' +
     '</summary>' +
     '<div class="body">' +
-      (soc.r ? '<div class="rc">🔁 <b>Ye ek baar phir se check kar lijiye:</b> ' + esc(soc.r) + '</div>' : '') +
+      // Two different notes, because the two cases need opposite instructions. An existing
+      // society tells him what the website ALREADY has from him, so he does not spend the
+      // round re-collecting it. A new one has nothing at all behind it, and saying "check
+      // again" there would be nonsense.
+      (soc.x
+        ? '<div class="rc">🆕 <b>Ye society humari list mein nayi hai.</b> Iska koi data website par nahi hai, ' +
+          'isliye jo aap bhejenge wahi is page par sabse pehli baat hogi. ' +
+          'Customer isi naam se search karta hai, isliye iska page bhi banega. ' +
+          'Jitna sach mein pata hai utna hi bhariye, baaki par "pata nahi" chuniye.</div>'
+        : soc.r ? '<div class="rc">📋 <b>Is society ke baare mein:</b> ' + esc(soc.r) + '</div>' : '') +
       '<div class="meta">' +
         '<label class="chip' + (s.visited ? ' on' : '') + '"><input type="checkbox" data-soc="' + esc(soc.n) + '" data-meta="visited"' + (s.visited ? ' checked' : '') + '>main khud gaya tha</label>' +
         '<label class="chip' + (s.office ? ' on' : '') + '"><input type="checkbox" data-soc="' + esc(soc.n) + '" data-meta="office"' + (s.office ? ' checked' : '') + '>office / guard se pucha</label>' +
