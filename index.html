@@ -112,12 +112,17 @@ taaki sirf bacha hua kaam saamne rahe. Unka data safe hai, kuch dobara nahi bhar
 <div class="bar">
   <button type="button" class="btn btn-copy" id="saveBtn">💾 Save</button>
   <button type="button" class="btn btn-copy" id="copyBtn">📋 Sab copy karo</button>
+  <button type="button" class="btn btn-copy" id="fileBtn">📥 File banao</button>
+  <button type="button" class="btn btn-copy" id="mailBtn">📧 Email</button>
+  <button type="button" class="btn btn-copy" id="docBtn">📄 Google Doc</button>
 </div>
 <div class="toast" id="toast"></div>
 
 <script>
 // Owner's WhatsApp. Same number the photo tool sends to, so everything lands in one place.
 var VIKAS_WA = '918570009071';
+// Where the CSV is emailed. Same person as the WhatsApp number above.
+var OWNER_EMAIL = 'vikas@indianshelf.com';
 
 // Rebuilt 17 August 2026 against the website's real data, after 105 of the 127 findings in
 // projects.json were deleted. Those had been stored as tier B, "humne khud dekha", but
@@ -217,7 +222,16 @@ var CORE = [
   { id: 'nocc', l: 'NOC ka charge kitna?', t: 'one', o: true,
     v: [DK, 'koi charge nahi', '10 hazar tak', '10-25 hazar', '25-50 hazar', '50 hazar se zyada', 'case ke hisaab se', 'koi aur'] },
   { id: 'bank', l: 'Kaun se bank loan dete hain?', t: 'many',
-    v: [DK, 'SBI', 'HDFC', 'ICICI', 'PNB', 'Axis', 'koi bank nahi deta'] }
+    v: [DK, 'SBI', 'HDFC', 'ICICI', 'PNB', 'Axis', 'koi bank nahi deta'] },
+  // Added 18 Aug 2026. 'nocc' already asks WHAT the charge is; these two ask who it lands on
+  // and what else the society wants before it signs. Both come straight off the seller page
+  // that is blocked without them: a seller's net proceeds change by tens of thousands
+  // depending on the answer to 'nocw', and 'nocx' is the thing that actually delays an NOC.
+  { id: 'nocw', l: 'NOC / transfer charge kaun deta hai?', t: 'one',
+    v: [DK, 'bechne wala deta hai', 'kharidne wala deta hai', 'aadha aadha', 'koi charge hi nahi'] },
+  { id: 'nocx', l: 'NOC se pehle society aur kya maangti hai?', t: 'many',
+    v: [DK, 'poora maintenance clear karao', 'kuch mahine ka advance maintenance', 'sinking fund',
+        'RWA membership transfer fee', 'aur kuch nahi maangti'] }
 ];
 // Three single-choice questions, not one multi-select. Learned on 14 August 2026: 'serv'
 // was 'many' with two mutually exclusive pairs inside it (24 ghante / subah shaam, and lift
@@ -513,6 +527,7 @@ function buildMessage(list, tag) {
 
 // Short keys keep the message compact and are what the filing side matches on.
 var SHORT = { maint: 'maint', mwho: 'kaun', rwa: 'RWA', noct: 'NOC time', nocc: 'NOC charge',
+  nocw: 'NOC kaun de', nocx: 'NOC se pehle',
   bank: 'bank', serv: 'services', water: 'paani', backup: 'backup', lift: 'lift',
   club: 'club', hand: 'handover', year: 'possession',
   stock: 'stock', loc: 'jagah', rent: 'kiraya', more: 'aur' };
@@ -556,6 +571,104 @@ document.getElementById('copyBtn').addEventListener('click', function () {
   if (navigator.clipboard) {
     navigator.clipboard.writeText(msg).then(function () { toast('Copy ho gaya ✅ WhatsApp me paste kar dijiye'); },
       function () { toast('Copy nahi hua'); });
+  } else { toast('Copy nahi hua'); }
+});
+
+// ── Getting everything off the phone at once ─────────────────────────────────
+// WhatsApp sends one society per message on purpose (the 11 August truncation), which is
+// right for filing as you go and wrong when the whole survey has to move in one piece.
+// Owner, 18 Aug 2026: all the data cannot come in one shot on WhatsApp. So there are now
+// three ways out that do not involve a message at all.
+//
+// CSV rather than the WhatsApp text, because a file that opens as a spreadsheet is the one
+// format that goes straight into Google Sheets, Excel and a Drive upload without anybody
+// retyping it. One row per society, one column per question, so the columns line up even
+// when a society is half answered.
+function csvCell(v) {
+  v = (v == null ? '' : String(v));
+  return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v;
+}
+function buildCSV(list) {
+  // Every question that exists anywhere, so a flat society and a plot society share a header.
+  var ids = [], seen = {};
+  SOCIETIES.forEach(function (soc) {
+    core(soc).concat(EXTRA).forEach(function (q) {
+      if (!seen[q.id]) { seen[q.id] = 1; ids.push(q); }
+    });
+  });
+  var rows = [['Society', 'Zone', 'Kaise pata chala'].concat(ids.map(function (q) { return q.l; }))];
+  list.forEach(function (soc) {
+    var st = state[soc.n] || {};
+    var how = [];
+    if (st.visited) how.push('khud gaya');
+    if (st.office) how.push('office se pucha');
+    var row = [soc.n, soc.z || '', how.join(' + ')];
+    ids.forEach(function (q) {
+      var v = (val(soc, q.id) || '').trim();
+      if (v === 'koi aur') v = (val(soc, q.id + '__o') || '').trim() || 'koi aur';
+      row.push(v === DK ? 'PATA NAHI' : v);
+    });
+    rows.push(row);
+  });
+  return rows.map(function (r) { return r.map(csvCell).join(','); }).join('\n');
+}
+
+function exportList() {
+  var done = SOCIETIES.filter(isDone);
+  return done.length ? done : SOCIETIES;
+}
+
+// A BOM, because Excel opens a UTF-8 CSV without one as mojibake and the answers are in
+// Hinglish with rupee signs in them.
+document.getElementById('fileBtn').addEventListener('click', function () {
+  var list = exportList();
+  var blob = new Blob(['\ufeff' + buildCSV(list)], { type: 'text/csv;charset=utf-8' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'society-details-' + new Date().toISOString().slice(0, 10) + '.csv';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+  toast('File ban gayi ✅ ' + list.length + ' society. Drive pe daal do ya email kar do');
+});
+
+// mailto has a practical length limit that varies by mail app and silently truncates past
+// it, so this deliberately does NOT put the survey in the body. It opens an addressed,
+// titled email and tells the user to attach the file, which cannot lose anything.
+document.getElementById('mailBtn').addEventListener('click', function () {
+  var list = exportList();
+  var subject = 'Society details - ' + list.length + ' society - ' + new Date().toISOString().slice(0, 10);
+  // Built by joining lines rather than embedding newline escapes, which is both readable
+  // and immune to an escape being lost by whatever edits this file next.
+  var body = [
+    'Society details bhej raha hoon.',
+    '',
+    'Pehle File banao dabao, phir jo CSV file bane usko is email ke saath attach kar do.',
+    'Body me mat paste karo, lamba data email me kat jaata hai.',
+    '',
+    list.length + ' society bhari hui hai.'
+  ].join(String.fromCharCode(10));
+  window.location.href = 'mailto:' + OWNER_EMAIL
+    + '?subject=' + encodeURIComponent(subject)
+    + '&body=' + encodeURIComponent(body);
+  toast('Email khul gaya. File attach karna mat bhoolna');
+});
+
+// There is no way to push text into a new Google Doc from a plain page without signing in
+// through Google, so this does the honest two-step: everything goes on the clipboard, then
+// a blank doc opens for one paste. Anything that claimed to "create the doc" would be
+// pretending.
+document.getElementById('docBtn').addEventListener('click', function () {
+  var list = exportList();
+  var text = buildMessage(list, '  (sab)');
+  var open = function () {
+    window.open('https://docs.google.com/document/create', '_blank');
+    toast('Copy ho gaya ✅ Google Doc khul raha hai, wahan paste kar do');
+  };
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(open, function () { toast('Copy nahi hua'); });
   } else { toast('Copy nahi hua'); }
 });
 

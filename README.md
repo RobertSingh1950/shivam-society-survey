@@ -134,6 +134,31 @@ Evidence tier follows what the message says about how it was found:
 - **Answer lists** live in `CORE`, `FLAT`, `PLOT`, `HR` and `EXTRA`. Adding an option is one
   array entry. Adding a question to `CORE` makes every completed society incomplete again,
   so add to `EXTRA` unless that is genuinely intended.
+- **Two charge questions were added to `CORE` on 18 August 2026, and that reopens every
+  society on purpose.** `nocw` (who pays the NOC or transfer charge) and `nocx` (what the
+  society wants before it signs the NOC). `nocc` already asked what the charge IS; neither of
+  the new ones could be inferred from it, and both decide a seller's net proceeds. They went
+  in `CORE` rather than `EXTRA` knowing the cost: every previously completed society now shows
+  as incomplete until those two are answered. That is the intended behaviour, because in
+  `EXTRA` they are optional and the data that is blocking the seller page would very likely
+  never arrive. Nothing is lost and nothing looks unsent: `pending()` is `isDone && !sent`, so
+  a reopened society that was already sent does not reappear in the unsent list. Only the
+  progress count drops, and it is showing the truth.
+- **Getting everything out at once, added 18 August 2026.** WhatsApp still sends one society
+  per message, which is right while filing as you go and wrong when the whole survey has to
+  move in one piece. Three additional routes:
+  - **📥 File banao** writes a CSV, one row per society, one column per question, with a
+    UTF-8 BOM so Excel does not mangle the Hinglish and the rupee signs. This is the one that
+    actually solves the problem, because a CSV uploads to Drive as a Google Sheet with no
+    retyping. The header is built from every question that exists anywhere, so a flat society
+    and a plot society share a column layout.
+  - **📧 Email** opens an addressed, titled mail and deliberately does NOT put the survey in
+    the body. `mailto` has a length limit that varies by mail app and truncates silently past
+    it, which is the same class of failure as the 11 August WhatsApp truncation. It tells the
+    user to attach the CSV instead.
+  - **📄 Google Doc** copies everything and opens a blank doc to paste into. A plain page
+    cannot push text into a new Google Doc without signing in through Google, so a button
+    claiming to create the doc would be pretending. Two taps, honestly labelled.
 - **Storage key is `shivam-society-facts-v3`.** The v2 answers were free text and cannot be
   read back into the token format. Nothing was lost: everything filled on 11 August was
   already sent and is now in `projects.json`.

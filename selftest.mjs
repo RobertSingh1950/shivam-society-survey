@@ -9,6 +9,18 @@ import assert from 'node:assert/strict';
 const html = fs.readFileSync(new URL('./index.html', import.meta.url), 'utf8');
 const js = html.slice(html.indexOf('<script>') + 8, html.lastIndexOf('</script>'));
 
+// 0. Parse the WHOLE page script before testing any of it. The checks below extract
+// individual functions by regex, so a syntax error anywhere outside those functions used to
+// pass every test and still leave a page that does nothing in a browser. That happened on
+// 18 August 2026: a newline escape was lost inside a mailto body, every function under test
+// stayed valid, and the page would not have run at all. `new Function` throws on a parse
+// error, which is exactly the signal wanted here.
+try {
+  new Function(js);
+} catch (e) {
+  assert.fail('page script does not parse: ' + e.message);
+}
+
 // Everything from the top of the script down to the render loop: constants, question lists,
 // core(), val(), plus the message builder and its helpers further down.
 const grab = (re) => { const m = js.match(re); assert.ok(m, 'not found: ' + re); return m[0]; };
@@ -23,12 +35,14 @@ const src = [
   grab(/function isDone\(soc\) \{[\s\S]*?\n\}/),
   grab(/function buildMessage\(list, tag\) \{[\s\S]*?\n\}/),
   grab(/var SHORT = \{[\s\S]*?\};\nfunction short\(id\) \{[^}]*\}/),
+  grab(/function csvCell\(v\) \{[\s\S]*?\n\}/),
+  grab(/function buildCSV\(list\) \{[\s\S]*?\n\}/),
   'function val(soc, id) { var s = state[soc.n] || {}; return (s.a || {})[id] || ""; }',
 ].join('\n');
 
 // `state` is a free variable inside the page's functions, so it goes in as a parameter and
 // each call gets its own isolated world to assert against.
-const load = new Function('state', src + '\nreturn { SOCIETIES, core, isDone, buildMessage, FLAT };');
+const load = new Function('state', src + '\nreturn { SOCIETIES, core, isDone, buildMessage, FLAT, buildCSV, csvCell };');
 const api = (s) => load(s);
 
 // 1. A society is not done until every core question is answered.
@@ -107,4 +121,52 @@ const api = (s) => load(s);
   assert.match(msg, /RWA: PATA NAHI/, 'an unknown on a new society is still a first-class answer');
 }
 
-console.log('selftest: 5 checks passed');
+
+
+// 6. The CSV is the path that carries a whole survey at once, so a broken one loses
+// everything rather than one message. Header and row must line up, and a comma or a quote
+// inside a free-text answer must not shift a column.
+{
+  const s = {};
+  const { SOCIETIES, buildCSV, csvCell } = api(s);
+  const soc = SOCIETIES[0];
+  s[soc.n] = { visited: true, a: { loc: 'Sector 4, "main" road' } };
+  const csv = buildCSV([soc]);
+  const lines = csv.split('\n');
+  assert.ok(lines[0].startsWith('Society,Zone,'), 'header must start with the fixed columns');
+
+  // A quoted field can legally contain the delimiter, so count columns by parsing rather
+  // than by splitting on commas, which is exactly the bug this guards against.
+  const cells = (line) => {
+    const out = []; let cur = '', q = false;
+    for (let i = 0; i < line.length; i++) {
+      const c = line[i];
+      if (q) {
+        if (c === '"' && line[i + 1] === '"') { cur += '"'; i++; }
+        else if (c === '"') q = false;
+        else cur += c;
+      } else if (c === '"') q = true;
+      else if (c === ',') { out.push(cur); cur = ''; }
+      else cur += c;
+    }
+    out.push(cur);
+    return out;
+  };
+  assert.equal(cells(lines[1]).length, cells(lines[0]).length,
+    'row must have exactly as many columns as the header');
+  assert.ok(cells(lines[1]).includes('Sector 4, "main" road'),
+    'a comma and quotes inside an answer must survive a round trip');
+  assert.equal(csvCell('plain'), 'plain', 'a plain value must not be quoted');
+  assert.equal(csvCell('a,b'), '"a,b"', 'a value with a comma must be quoted');
+}
+
+// 7. The two new charge questions must be part of core, or a society counts as done
+// without them and the seller page stays blocked for another round.
+{
+  const { SOCIETIES, core } = api({});
+  const ids = core(SOCIETIES[0]).map((q) => q.id);
+  assert.ok(ids.includes('nocw'), 'who pays the NOC charge must be a core question');
+  assert.ok(ids.includes('nocx'), 'what the society wants before NOC must be a core question');
+}
+
+console.log('selftest: 8 checks passed, page script parses');
