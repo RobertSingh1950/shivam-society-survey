@@ -134,16 +134,24 @@ Evidence tier follows what the message says about how it was found:
 - **Answer lists** live in `CORE`, `FLAT`, `PLOT`, `HR` and `EXTRA`. Adding an option is one
   array entry. Adding a question to `CORE` makes every completed society incomplete again,
   so add to `EXTRA` unless that is genuinely intended.
-- **Two charge questions were added to `CORE` on 18 August 2026, and that reopens every
-  society on purpose.** `nocw` (who pays the NOC or transfer charge) and `nocx` (what the
-  society wants before it signs the NOC). `nocc` already asked what the charge IS; neither of
-  the new ones could be inferred from it, and both decide a seller's net proceeds. They went
-  in `CORE` rather than `EXTRA` knowing the cost: every previously completed society now shows
-  as incomplete until those two are answered. That is the intended behaviour, because in
-  `EXTRA` they are optional and the data that is blocking the seller page would very likely
-  never arrive. Nothing is lost and nothing looks unsent: `pending()` is `isDone && !sent`, so
-  a reopened society that was already sent does not reappear in the unsent list. Only the
-  progress count drops, and it is showing the truth.
+- **Two charge questions were added on 18 August 2026, and they do NOT reopen finished
+  societies.** `nocw` (who pays the NOC or transfer charge) and `nocx` (what the society wants
+  before it signs). `nocc` already asked what the charge IS; neither of the new ones could be
+  inferred from it, and both decide a seller's net proceeds.
+
+  The old warning in this file said adding to `CORE` makes every completed society incomplete,
+  so add to `EXTRA` instead. Both halves of that are bad: `CORE` reads as lost work and drops
+  the progress bar for something nobody did wrong, and `EXTRA` makes the question optional, so
+  the data blocking the seller page never arrives. **That trade is now gone.** A question
+  carrying **`since: 1`** is a full core question for the card, the WhatsApp message and the
+  CSV, and is excluded from `isDone()`. Finished societies stay finished and stay sendable;
+  the new questions are counted and chased separately, shown per card as
+  `bhej diya · 2 naye sawaal` and in the progress line as `N me 2 naye sawaal baaki`.
+
+  **Give any question added mid-survey a `since` flag.** It is the whole reason this is not a
+  choice between annoying the team and not getting the answer. Guarded by check 7 in
+  `selftest.mjs`, which asserts that a society completed before the new questions existed
+  still reads as done while both new questions still count as pending.
 - **Getting everything out at once, added 18 August 2026.** WhatsApp still sends one society
   per message, which is right while filing as you go and wrong when the whole survey has to
   move in one piece. Three additional routes:

@@ -32,6 +32,9 @@ const src = [
   grab(/var HR = \{[\s\S]*?\n\s*v: \[[^\]]*\] \};/),
   grab(/var EXTRA = \[[\s\S]*?\n\];/),
   grab(/function core\(soc\) \{[\s\S]*?\n\}/),
+  grab(/function baseCore\(soc\) \{[\s\S]*?\n\}/),
+  grab(/function newQs\(soc\) \{[\s\S]*?\n\}/),
+  grab(/function newPending\(soc\) \{[\s\S]*?\n\}/),
   grab(/function isDone\(soc\) \{[\s\S]*?\n\}/),
   grab(/function buildMessage\(list, tag\) \{[\s\S]*?\n\}/),
   grab(/var SHORT = \{[\s\S]*?\};\nfunction short\(id\) \{[^}]*\}/),
@@ -42,7 +45,7 @@ const src = [
 
 // `state` is a free variable inside the page's functions, so it goes in as a parameter and
 // each call gets its own isolated world to assert against.
-const load = new Function('state', src + '\nreturn { SOCIETIES, core, isDone, buildMessage, FLAT, buildCSV, csvCell };');
+const load = new Function('state', src + '\nreturn { SOCIETIES, core, isDone, buildMessage, FLAT, buildCSV, csvCell, baseCore, newQs, newPending };');
 const api = (s) => load(s);
 
 // 1. A society is not done until every core question is answered.
@@ -160,13 +163,31 @@ const api = (s) => load(s);
   assert.equal(csvCell('a,b'), '"a,b"', 'a value with a comma must be quoted');
 }
 
-// 7. The two new charge questions must be part of core, or a society counts as done
-// without them and the seller page stays blocked for another round.
+// 7. Questions added mid-survey must be asked without invalidating finished work. This is
+// the contract that replaced the CORE-versus-EXTRA trade: they ride along in core() so they
+// reach the message and the CSV, they are excluded from isDone so nothing reopens, and they
+// are still counted so they get chased.
 {
-  const { SOCIETIES, core } = api({});
-  const ids = core(SOCIETIES[0]).map((q) => q.id);
-  assert.ok(ids.includes('nocw'), 'who pays the NOC charge must be a core question');
-  assert.ok(ids.includes('nocx'), 'what the society wants before NOC must be a core question');
+  const s = {};
+  const { SOCIETIES, core, baseCore, newQs, newPending, isDone } = api(s);
+  const soc = SOCIETIES[0];
+  const ids = core(soc).map((q) => q.id);
+  assert.ok(ids.includes('nocw') && ids.includes('nocx'),
+    'the charge questions must be in core, so they reach the message and the CSV');
+
+  const newIds = newQs(soc).map((q) => q.id);
+  assert.deepEqual(newIds.sort(), ['nocw', 'nocx'], 'exactly the charge questions are new');
+  assert.ok(!baseCore(soc).some((q) => q.since), 'baseCore must contain no since-flagged question');
+
+  // A society answered before the new questions existed must still read as done.
+  const a = {};
+  baseCore(soc).forEach((q) => { a[q.id] = 'x'; });
+  s[soc.n] = { a };
+  assert.equal(isDone(soc), true, 'a society finished before the new questions must stay done');
+  assert.equal(newPending(soc), 2, 'both new questions must still be counted as pending');
+
+  a.nocw = 'bechne wala deta hai';
+  assert.equal(newPending(soc), 1, 'answering one new question must drop the pending count');
 }
 
 console.log('selftest: 8 checks passed, page script parses');

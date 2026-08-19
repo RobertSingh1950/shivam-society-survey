@@ -227,9 +227,9 @@ var CORE = [
   // and what else the society wants before it signs. Both come straight off the seller page
   // that is blocked without them: a seller's net proceeds change by tens of thousands
   // depending on the answer to 'nocw', and 'nocx' is the thing that actually delays an NOC.
-  { id: 'nocw', l: 'NOC / transfer charge kaun deta hai?', t: 'one',
+  { id: 'nocw', l: 'NOC / transfer charge kaun deta hai?', t: 'one', since: 1,
     v: [DK, 'bechne wala deta hai', 'kharidne wala deta hai', 'aadha aadha', 'koi charge hi nahi'] },
-  { id: 'nocx', l: 'NOC se pehle society aur kya maangti hai?', t: 'many',
+  { id: 'nocx', l: 'NOC se pehle society aur kya maangti hai?', t: 'many', since: 1,
     v: [DK, 'poora maintenance clear karao', 'kuch mahine ka advance maintenance', 'sinking fund',
         'RWA membership transfer fee', 'aur kuch nahi maangti'] }
 ];
@@ -391,21 +391,43 @@ if (!SHOWN.length) {
 
 // Done when every core question has an answer, and "pata nahi" counts as one. Half-filled
 // does not tick, so the counter drives the list to completion rather than rewarding a start.
+// A question added after people have already finished societies carries a cost the README
+// used to just warn about: putting it in CORE turned every completed society back to
+// incomplete, which reads as lost work and drops the progress bar for something nobody did
+// wrong. Putting it in EXTRA instead makes it optional, and an optional question that blocks
+// a page does not get answered.
+//
+// So neither. A question marked `since` is a real core question for the message, the CSV and
+// the card, and it is deliberately NOT counted by isDone. Completed societies stay completed
+// and stay sendable; the new questions are chased separately, as the addition they are.
+// Any future question added mid-survey should carry `since` for the same reason.
+function baseCore(soc) {
+  return core(soc).filter(function (q) { return !q.since; });
+}
+function newQs(soc) {
+  return core(soc).filter(function (q) { return q.since; });
+}
+function newPending(soc) {
+  return newQs(soc).filter(function (q) { return (val(soc, q.id) || '').trim() === ''; }).length;
+}
 function isDone(soc) {
-  return core(soc).every(function (q) { return (val(soc, q.id) || '').trim() !== ''; });
+  return baseCore(soc).every(function (q) { return (val(soc, q.id) || '').trim() !== ''; });
 }
 
 function refresh() {
-  var done = 0, unsent = 0;
+  var done = 0, unsent = 0, newLeft = 0;
   document.querySelectorAll('.card').forEach(function (card, i) {
     var soc = SHOWN[i];
     var s = state[soc.n] || {};
     var d = isDone(soc);
     card.classList.toggle('done', d);
     card.classList.toggle('sent', !!s.sent);
-    var filled = core(soc).filter(function (q) { return (val(soc, q.id) || '').trim() !== ''; }).length;
-    card.querySelector('.cnt').textContent = s.sent ? 'bhej diya' : filled + '/' + core(soc).length;
+    var filled = baseCore(soc).filter(function (q) { return (val(soc, q.id) || '').trim() !== ''; }).length;
+    var np = newPending(soc);
+    var base = s.sent ? 'bhej diya' : filled + '/' + baseCore(soc).length;
+    card.querySelector('.cnt').textContent = base + (np ? '  ·  ' + np + ' naye sawaal' : '');
     if (d) { done++; if (!s.sent) unsent++; }
+    if (np) newLeft++;
     var sb = card.querySelector('.send');
     sb.disabled = !d;
     sb.className = 'send' + (d && s.sent ? ' done' : '');
@@ -415,6 +437,7 @@ function refresh() {
   });
   document.getElementById('progress').textContent = SHOWN.length
     ? done + ' / ' + SHOWN.length + ' society done' +
+      (newLeft ? '   ·   ' + newLeft + ' me 2 naye sawaal baaki' : '') +
       (HIDDEN ? '   ·   ' + HIDDEN + ' pehle ho chuki hain, chhupa di' : '')
     : 'Sab ho gaya ✅  ' + HIDDEN + ' society ho chuki hain';
 
