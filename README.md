@@ -131,6 +131,24 @@ Evidence tier follows what the message says about how it was found:
 
 - **Society list** lives in the `SOCIETIES` array in `index.html`. Keep it in step with
   `src/data/projects.json` in the website repo. Nothing links the two automatically.
+- **`r` is an ASK, and only an ask. Never a description of what we already hold.** Every
+  "ye maintenance aa chuka hai, dobara mat bhariye" note was deleted on 20 August 2026. Those
+  were hand-written snapshots of `projects.json`, so each went stale the moment a round was
+  filed, and a stale one is worse than nothing: on 19 August a card said a field was empty
+  while his own stored answer already filled it, so he sent it untouched and twenty-one
+  societies came back byte-identical. **What is missing is derived instead** by `gaps()` and
+  rendered by `gapLine()` into the `.rc.gap` block at the top of each card, computed from the
+  same answers the questions render from, so it cannot go stale and cannot disagree with the
+  form under it. Write an `r` only for what the answers cannot say for themselves: two rounds
+  disagreed, or we need a document the form has no question for. Checks 11 and 12 in
+  `selftest.mjs` guard both halves, and check 12 fails the build on a note that describes held
+  data. Keep them rare, because a note on every card is a note on no card.
+- **A society is on screen only while it is missing something.** `soc.r` used to force its
+  card into `SHOWN`, which pinned a society there permanently once it had a note, even after
+  every answer was in. Removed 20 August 2026. Nothing is lost, because a note that needs an
+  answer always has an empty question under it: the re-check pass blanks the disputed answers,
+  and an empty question shows the card through `!isDone`. So the list shrinks as the work gets
+  done, which is the only progress signal the tool gives him.
 - **Answer lists** live in `CORE`, `FLAT`, `PLOT`, `HR` and `EXTRA`. Adding an option is one
   array entry. Adding a question to `CORE` makes every completed society incomplete again,
   so add to `EXTRA` unless that is genuinely intended.

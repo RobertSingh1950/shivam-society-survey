@@ -48,6 +48,12 @@ const src = [
 const load = new Function('state', src + '\nreturn { SOCIETIES, core, isDone, buildMessage, FLAT, buildCSV, csvCell, baseCore, newQs, newPending };');
 const api = (s) => load(s);
 
+// The gap list needs EXTRA and the short-label map alongside the question sets, so it gets
+// its own world rather than widening the one above and disturbing the checks that use it.
+const gapSrc = [src, grab(/function gaps\(soc\) \{[\s\S]*?\n\}/), grab(/function gapLine\(soc\) \{[\s\S]*?\n\}/)].join('\n');
+const loadGaps = new Function('state', gapSrc +
+  '\nreturn { SOCIETIES, core, gaps, gapLine, short, SHORT, EXTRA, CORE, FLAT, PLOT };');
+
 // 1. A society is not done until every core question is answered.
 {
   const s = {};
@@ -253,4 +259,44 @@ const api = (s) => load(s);
   assert.equal(s['Terra Castle'].a.mwho, 'koi nahi leta', 'a matching "nobody" pair is untouched');
 }
 
-console.log('selftest: 11 checks passed, page script parses');
+// 11. The card says what is MISSING, derived, and it never says what is held. The
+// hand-written "ye pehle se hai" notes were deleted on 20 August 2026 because a snapshot of
+// held data goes stale the moment a round is filed, which is exactly how the 19 August round
+// produced nothing. A gap computed from the answers cannot disagree with the form under it.
+{
+  const s = {};
+  const { SOCIETIES, core, gaps, gapLine } = loadGaps(s);
+  const soc = SOCIETIES.find((x) => x.k === 'flat' && !x.x);
+
+  let g = gaps(soc);
+  assert.equal(g.need.length, core(soc).length, 'an untouched society is missing every question');
+  assert.match(gapLine(soc), /baaki hai/, 'and the line says so');
+
+  s[soc.n] = { a: {} };
+  core(soc).forEach((q) => { s[soc.n].a[q.id] = 'x'; });
+  g = gaps(soc);
+  assert.equal(g.need.length, 0, 'answering every question clears the required gaps');
+  assert.ok(g.extra.length > 0, 'the optional ones are tracked separately, not merged in');
+  assert.match(gapLine(soc), /Zaroori sab bhar gaya hai/, 'extras alone must not read as incomplete');
+
+  // The gap list is built from short labels, so a question with no SHORT entry would print a
+  // raw id at him. Every question in every set must have one.
+  const { EXTRA, CORE, FLAT, PLOT, SHORT } = loadGaps({});
+  [...CORE, ...FLAT, ...PLOT, ...EXTRA].forEach((q) => {
+    assert.ok(Object.prototype.hasOwnProperty.call(SHORT, q.id),
+      'question ' + q.id + ' needs a SHORT entry or the gap list prints its raw id at him');
+  });
+}
+
+// 12. A note is an ASK. None of them may restate what we already hold, because that is the
+// class of note that stopped the 19 August round from re-answering anything.
+{
+  const { SOCIETIES } = api({});
+  SOCIETIES.filter((x) => x.r).forEach((x) => {
+    assert.ok(!/aa chuk|pehle se hai|website par (hai|aa)|hat gaya hai/i.test(x.r),
+      x.n + ': a note must not describe held data, it goes stale and suppresses re-answers');
+    assert.ok(!x.x, x.n + ': a brand new society has nothing to ask about yet');
+  });
+}
+
+console.log('selftest: 13 checks passed, page script parses');

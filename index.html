@@ -59,6 +59,11 @@
      stays rare enough to be read rather than scrolled past. */
   .rc { background: #3a2a12; border: 1px solid #d9a441; border-radius: 9px;
     padding: 10px 12px; margin-bottom: 12px; font-size: 13px; color: #ffd98a; line-height: 1.45; }
+  /* The derived gap list is on EVERY card, so it is deliberately quiet. Amber has to keep
+     meaning "there is something here you would not work out yourself", and it stops meaning
+     that the moment every card wears it. */
+  .rc.gap { background: #161b24; border-color: #2b3342; color: #9aa3b2; }
+  .rc.gap b { color: #e8eaf0; }
   /* Each society sends itself. One message per society can never be truncated, and the
      button sits where the answers are, so there is nothing to hunt for at the bottom. */
   .send { width: 100%; margin-top: 16px; padding: 13px 10px; border: 0; border-radius: 10px;
@@ -75,17 +80,17 @@
 <b>list mein se choose karna hai</b>, likhna nahi padega. Jo pata nahi hai uspar
 <b>"pata nahi"</b> choose kar dijiye. Sab kuch <b>apne aap save hota rehta hai</b>. 👍
 <br><br>Jo society aap pehle bhar ke bhej chuke hain wo <b>list se hata di gayi hain</b>,
-taaki sirf bacha hua kaam saamne rahe. Unka data safe hai, kuch dobara nahi bharna.</p>
+taaki sirf bacha hua kaam saamne rahe. Unka data safe hai, kuch dobara nahi bharna.
+Har card par upar likha hai ki <b>us society mein kya baaki hai</b>.</p>
 
 <div class="note">
-  <b>17 August ko website ka bahut sa data hata diya gaya hai.</b> Jo aapne 11 August ko
-  bheja tha wo poora safe hai aur website par hai. Uske baad jo data aaya tha wo humne khud
-  nahi dekha tha, isliye hata diya. Har card par likha hai ki us society ka <b>kya pehle se
-  hai</b> aur <b>kya khaali hai</b>, taaki wahi kaam ho jo bacha hai.
+  <b>Is list mein sirf wahi society hai jismein kuch baaki hai.</b> Jo society poori bhar ke
+  bhej di gayi hai wo apne aap hat jaati hai, isliye jitna kaam aap karenge list utni chhoti
+  hoti jaayegi. Kuch dobara nahi bharna, aur jo bhej chuke hain wo poora safe hai.
   <br><br>
-  Ye char cheezein <b>ab har society mein khaali hain</b>, in par sabse zyada zaroorat hai:
-  <b>bank loan</b>, <b>transfer / NOC</b>, <b>possession kab mili</b>, aur <b>society kahan
-  par hai</b>.
+  Har card khulte hi upar likha hai <b>us society mein kya-kya baaki hai</b>. Ye apne aap
+  ginta hai aapke apne jawaabon se, isliye ye kabhi galat nahi ho sakta. Pehle hum haath se
+  likhte the ki kya pehle se hai, aur wo purana pad jaata tha, isliye hata diya gaya hai.
   <br><br>
   ⚠️ <b>Kuch societies jo aap bhej chuke the wo wapas khul gayi hain, aur ye humari galti
   theek karne ke liye hai, aapki nahi.</b> In societies mein 11 August aur 14 August ke jawab
@@ -142,41 +147,50 @@ var OWNER_EMAIL = 'vikas@indianshelf.com';
 // earlier answers, and one side of nearly every conflict was the invented data. Asking
 // Sanjay ji to settle a contradiction that no longer exists would waste the round.
 //
-// Each `r` below now says only two things: what the website already holds from him (so he
-// does not collect it twice), and what is genuinely still empty. Derived from
-// projects.json, not from memory.
+// `r` IS AN ASK, AND ONLY AN ASK. Rewritten 20 August 2026, when every note describing what
+// the website already held was deleted.
 //
-// UNIVERSAL GAPS, true for every society, so they are in the header note instead of being
-// repeated on all 32 cards: bank loan, transfer/NOC, possession year, and location.
+// Those notes were written by hand against projects.json, so each one was a snapshot that
+// went stale the moment a round was filed, and a stale "ye aa chuka hai, dobara mat bhariye"
+// is worse than no note at all: on 19 August it told him a field was empty while his own
+// stored answer already filled it, so he sent the card untouched and the round produced
+// nothing. Nothing here should ever restate held data again.
+//
+// What is missing is DERIVED instead, from the answers themselves, and shown on the card
+// header. That cannot go stale, because it is computed from the same state the questions
+// render from. A note is therefore only worth writing when it says something the answers
+// cannot: two rounds disagreed, or we need a document the form has no question for.
+//
+// Keep them rare. A note on every card is a note on no card.
 var SOCIETIES = [
   // ── Flats ────────────────────────────────────────────────────────────────────
-  { n: 'MVL Coral', k: 'flat', r: 'DOBARA POOCHHNA HAI: NOC ka charge. 11 August ko aapne bola tha "case ke hisaab se", 14 August ko "koi charge nahi". Jo sahi hai wahi bhariye, tab tak website par kuch nahi likha ja sakta.' },
-  { n: 'HFL Presidency Estate', k: 'flat', r: 'Maintenance, transfer aur services aa chuke hain. Sabse zaroori: bank aur possession year.' },
-  { n: 'Cosmos', k: 'flat', r: 'DOBARA POOCHHNA HAI: maintenance. 11 August ko ₹2 per sq ft, 14 August ko ₹2.25 per sq ft aaya tha. Ek hi sahi hoga.' },
-  { n: 'Essentia', k: 'flat', r: 'DOBARA POOCHHNA HAI: maintenance. 11 August ko ₹2 per sq ft, 14 August ko ₹2.25 per sq ft aaya tha. Ek hi sahi hoga.' },
-  { n: 'Terra Elegance', k: 'flat', r: 'Maintenance ₹2.25 per sq ft, paani, light aur lift sab aa chuke hain. Yahan kuch dobara nahi bharna.' },
-  { n: 'Terra Heritage', k: 'flat', r: 'DOBARA POOCHHNA HAI: club house khula hai ya abhi ban raha hai? 11 August ko khula bataya tha, 14 August ko ban raha hai. Teen din me club house banta nahi, to ek jagah galat tick hua hai.' },
-  { n: 'Terra Castle', k: 'flat', r: 'Sab bhar gaya hai. Sirf 3 BHK ka kiraya khaali hai. Agar 3 BHK hai hi nahi to wahi likh dijiye.' },
+  { n: 'MVL Coral', k: 'flat', r: 'NOC ka charge: 11 August ko "case ke hisaab se", 14 August ko "koi charge nahi". Ek hi sahi hoga.' },
+  { n: 'HFL Presidency Estate', k: 'flat' },
+  { n: 'Cosmos', k: 'flat', r: 'Maintenance: 11 August ko ₹2 per sq ft, 14 August ko ₹2.25 per sq ft. Ek hi sahi hoga.' },
+  { n: 'Essentia', k: 'flat', r: 'Maintenance: 11 August ko ₹2 per sq ft, 14 August ko ₹2.25 per sq ft. Ek hi sahi hoga.' },
+  { n: 'Terra Elegance', k: 'flat' },
+  { n: 'Terra Heritage', k: 'flat', r: 'Club house khula hai ya abhi ban raha hai? 11 August ko khula, 14 August ko ban raha hai. Teen din me club house banta nahi, to ek jagah galat tick hua hai.' },
+  { n: 'Terra Castle', k: 'flat' },
   // ── Plots ────────────────────────────────────────────────────────────────────
   // 'Omaxe Medocity' was carried over from the photo tool and is dropped (owner, 13 Aug
   // 2026: "Omaxe Green Meadow City is main"). It was never an Omaxe product name: the
   // 4 August audit checked Omaxe's own Bhiwadi list and found Panorama City, Green Meadow
   // City, Marigold, Sunrise and Europia, with no Medocity anywhere. The website already
   // 301s /projects/omaxe-medocity/ to /projects/omaxe-green-meadow-city/.
-  { n: 'Omaxe Green Meadow City', k: 'plot', r: 'SEWER: agar sewer line bani hai to tick kar dijiye. Agar bani hi nahi hai to neeche "Aur kuch batana ho?" me likh dijiye, kyunki khaali chhodne se pata nahi chalta ki bani nahi hai ya aap skip kar gaye.' },
+  { n: 'Omaxe Green Meadow City', k: 'plot', r: 'Sewer line bani hai to tick kar dijiye. Bani hi nahi hai to neeche "Aur kuch batana ho?" me likh dijiye, warna pata nahi chalta ki bani nahi hai ya aap skip kar gaye.' },
   { n: 'Omaxe Panorama City', k: 'plot' },
-  { n: 'VBHC', k: 'plot', z: 'Honda zone', r: 'DOBARA POOCHHNA HAI: bank. HDFC ke alawa kaun deta hai? 11 August ko SBI aaya tha, 14 August ko ICICI. Isliye abhi sirf HDFC website par hai.' },
-  { n: 'Krish Season', k: 'plot', z: 'Honda zone', r: 'DOBARA POOCHHNA HAI: RWA bani hai ya nahi, maintenance kitna hai aur kaun leta hai, aur bank kaun se hain. 11 August ko "RWA nahi bani" aaya tha, 14 August ko "registered RWA ₹5 per gaj le rahi hai". Bank me bhi HDFC ke alawa dono baar alag naam aaye.' },
-  { n: 'Ekta Enclave', k: 'plot', r: 'DOBARA POOCHHNA HAI: handover BIDA ko ho gaya ya abhi builder ke paas hai? 11 August ko builder, 14 August ko BIDA aaya tha. Kharidne wale ka vakil sabse pehle yahi dekhta hai. Maintenance bhi dobara bhariye, kyunki rate aur "koi nahi leta" dono ek saath aa gaye the.' },
-  { n: 'Aqasia Homes', k: 'plot', r: 'Maintenance (naya project, koi nahi le raha) aur builder ke paas hona aa chuka hai. SEWER: bani hai to tick kar dijiye, nahi bani to neeche "Aur kuch batana ho?" me likh dijiye. Khaali chhodne se pata nahi chalta.' },
-  { n: 'Terra City', k: 'plot', r: 'DOBARA POOCHHNA HAI: maintenance kitna aur kis hisaab se? 11 August ko ₹2 per sq ft, 14 August ko ₹5 per gaj. Plot colony me aam taur par gaj ka hisaab chalta hai. Chanderlok City ka jawab usi din ulta pad gaya tha, to dhyan se dekh lijiye ki dono aapas me badal to nahi gaye.' },
-  { n: 'Lifestyle City', k: 'plot', r: 'DOBARA POOCHHNA HAI: SBI is project par loan deta hai ya nahi? 11 August ko aapne bola tha SBI nahi deta, 14 August ko SBI naam me aa gaya. "Falana bank loan nahi deta" website par sabse bhaari baat hoti hai, isliye jab tak pakka na ho hum kuch nahi likhenge. Stock ka jawab bhi khaali hai.' },
-  { n: 'Chanderlok City', k: 'plot', r: 'DOBARA POOCHHNA HAI: maintenance kitna, kaun leta hai, aur RWA registered hai ya sirf committee? 11 August ko "₹5 per gaj, 2017 se registered RWA" aaya tha, 14 August ko "₹2 per sq ft, koi nahi leta, sirf committee". Poora ulta ho gaya. Terra City usi din ulta pad gaya tha, dono aapas me badal to nahi gaye? Jagah ka naam bhi khaali hai.' },
-  { n: 'Reverence (Ashadeep)', k: 'plot', r: 'Maintenance (naya project) aur builder ke paas hona aa chuka hai. NOC ka time abhi khaali hai.' },
-  { n: 'MGH Anandam', k: 'plot', z: 'Dharuhera', r: 'Maintenance ₹7 per gaj aur DDJAY colony hona aa chuka hai. DTCP licence number chahiye, aur jagah ka naam bhi khaali hai.' },
-  { n: 'AMD City', k: 'plot', z: 'Dharuhera', r: 'Poora data hat gaya hai. DTCP licence number bhi chahiye.' },
-  { n: 'Tulip City', k: 'plot', z: 'Dharuhera', r: 'Poora data hat gaya hai. DTCP licence number bhi chahiye.' },
-  { n: 'Dwarkadish', k: 'plot', z: 'Dharuhera', r: 'Poora data hat gaya hai. DTCP licence number bhi chahiye.' },
+  { n: 'VBHC', k: 'plot', z: 'Honda zone', r: 'Bank: HDFC ke alawa kaun deta hai? 11 August ko SBI, 14 August ko ICICI. Dono me se jo sahi hai wahi chuniye.' },
+  { n: 'Krish Season', k: 'plot', z: 'Honda zone', r: 'RWA, maintenance aur bank. 11 August ko "RWA nahi bani", 14 August ko "registered RWA ₹5 per gaj le rahi hai". Bank me bhi HDFC ke alawa dono baar alag naam aaye.' },
+  { n: 'Ekta Enclave', k: 'plot', r: 'Handover BIDA ko ho gaya ya abhi builder ke paas hai? 11 August ko builder, 14 August ko BIDA. Kharidne wale ka vakil sabse pehle yahi dekhta hai.' },
+  { n: 'Aqasia Homes', k: 'plot', r: 'Sewer line bani hai to tick kar dijiye. Bani hi nahi hai to neeche "Aur kuch batana ho?" me likh dijiye, warna pata nahi chalta ki bani nahi hai ya aap skip kar gaye.' },
+  { n: 'Terra City', k: 'plot', r: 'Maintenance kitna aur kis hisaab se? 11 August ko ₹2 per sq ft, 14 August ko ₹5 per gaj. Plot colony me aam taur par gaj chalta hai. Chanderlok City usi din ulta pad gaya tha, to dekh lijiye ki dono aapas me badal to nahi gaye.' },
+  { n: 'Lifestyle City', k: 'plot', r: 'SBI is project par loan deta hai ya nahi? 11 August ko aapne bola tha SBI nahi deta, 14 August ko SBI naam me aa gaya. "Falana bank loan nahi deta" website par sabse bhaari baat hoti hai, isliye pakka hone tak hum kuch nahi likhenge.' },
+  { n: 'Chanderlok City', k: 'plot', r: 'Maintenance kitna, kaun leta hai, aur RWA registered hai ya sirf committee? 11 August ko "₹5 per gaj, 2017 se registered RWA", 14 August ko "₹2 per sq ft, koi nahi leta, sirf committee". Poora ulta ho gaya. Terra City usi din ulta pad gaya tha, dono aapas me badal to nahi gaye?' },
+  { n: 'Reverence (Ashadeep)', k: 'plot' },
+  { n: 'MGH Anandam', k: 'plot', z: 'Dharuhera', r: 'DTCP licence number chahiye.' },
+  { n: 'AMD City', k: 'plot', z: 'Dharuhera', r: 'DTCP licence number chahiye.' },
+  { n: 'Tulip City', k: 'plot', z: 'Dharuhera', r: 'DTCP licence number chahiye.' },
+  { n: 'Dwarkadish', k: 'plot', z: 'Dharuhera', r: 'DTCP licence number chahiye.' },
 
   // ── Bhiwadi ki baaki societies (owner, 17 Aug 2026) ─────────────────────────
   // Added when the owner widened the map to cover every society in the belt: "we are going
@@ -404,8 +418,16 @@ function field(soc, q) {
 // card to open: the header said "21 me 2 naye sawaal baaki" and pointed at nothing. Only
 // Nimai Greens, which was never finished, answered them. A pending new question now keeps
 // the card on screen. It still counts as done and it still sends.
+// `soc.r` was in this filter and came OUT on 20 August 2026. A note pinned its card on
+// screen permanently, so a society we hold complete data on sat in the list for ever with
+// nothing left to do on it, which is the complaint that started this pass. Nothing is lost:
+// a note that needs an answer has an EMPTY question under it, because the re-check pass
+// blanks the disputed answers, and an empty question shows the card through `!isDone`. So
+// the card appears exactly while it has work in it and hides the moment the work is done.
+//
+// The rule this encodes: a society is on this screen only if it is missing something.
 var SHOWN = SOCIETIES.filter(function (soc) {
-  return soc.r || !isDone(soc) || newPending(soc) > 0 || !(state[soc.n] || {}).sent;
+  return !isDone(soc) || newPending(soc) > 0 || !(state[soc.n] || {}).sent;
 });
 var HIDDEN = SOCIETIES.length - SHOWN.length;
 
@@ -421,16 +443,19 @@ SHOWN.forEach(function (soc) {
       '<span class="cnt"></span><span class="tick">✅</span>' +
     '</summary>' +
     '<div class="body">' +
-      // Two different notes, because the two cases need opposite instructions. An existing
-      // society tells him what the website ALREADY has from him, so he does not spend the
-      // round re-collecting it. A new one has nothing at all behind it, and saying "check
-      // again" there would be nonsense.
+      // A new society gets an orientation line; nothing is held on it, so there is no gap to
+      // name. Everyone else gets the gap list, DERIVED, and it is deliberately the only thing
+      // on the card that describes the state of the data. The hand-written "ye pehle se hai"
+      // notes that used to sit here were deleted on 20 August 2026.
       (soc.x
         ? '<div class="rc">🆕 <b>Ye society humari list mein nayi hai.</b> Iska koi data website par nahi hai, ' +
           'isliye jo aap bhejenge wahi is page par sabse pehli baat hogi. ' +
           'Customer isi naam se search karta hai, isliye iska page bhi banega. ' +
           'Jitna sach mein pata hai utna hi bhariye, baaki par "pata nahi" chuniye.</div>'
-        : soc.r ? '<div class="rc">📋 <b>Is society ke baare mein:</b> ' + esc(soc.r) + '</div>' : '') +
+        : '<div class="rc gap" data-gap="' + esc(soc.n) + '"></div>') +
+      // An ask is a second, separate block. It says what the answers cannot say for
+      // themselves, so it must not be mixed into the derived gap list above it.
+      (soc.r ? '<div class="rc">📋 <b>Dhyan dijiye:</b> ' + esc(soc.r) + '</div>' : '') +
       '<div class="meta">' +
         '<label class="chip' + (s.visited ? ' on' : '') + '"><input type="checkbox" data-soc="' + esc(soc.n) + '" data-meta="visited"' + (s.visited ? ' checked' : '') + '>main khud gaya tha</label>' +
         '<label class="chip' + (s.office ? ' on' : '') + '"><input type="checkbox" data-soc="' + esc(soc.n) + '" data-meta="office"' + (s.office ? ' checked' : '') + '>office / guard se pucha</label>' +
@@ -477,6 +502,27 @@ function isDone(soc) {
   return baseCore(soc).every(function (q) { return (val(soc, q.id) || '').trim() !== ''; });
 }
 
+// What is still missing on a society, derived from its own answers. This replaced the
+// hand-written "what the website already has" notes on 20 August 2026, and the direction is
+// the point: a note about held data has to be maintained by hand and is wrong the moment a
+// round is filed, while a gap computes itself and cannot disagree with the form under it.
+// The extras are named separately because they do not block the Submit button, so listing
+// them beside the required ones would misrepresent what is actually being asked for.
+function gaps(soc) {
+  var empty = function (q) { return (val(soc, q.id) || '').trim() === ''; };
+  return { need: core(soc).filter(empty).map(function (q) { return short(q.id); }),
+    extra: EXTRA.filter(empty).map(function (q) { return short(q.id); }) };
+}
+function gapLine(soc) {
+  var g = gaps(soc);
+  if (!g.need.length && !g.extra.length) return '✅ <b>Is society ka sab kuch bhar gaya hai.</b> Bas Submit dabana baaki hai.';
+  var out = g.need.length
+    ? '📋 <b>Is society me ye baaki hai:</b> ' + g.need.join(', ')
+    : '✅ <b>Zaroori sab bhar gaya hai.</b>';
+  if (g.extra.length) out += '<br><span class="r2n">Extra (bhare bina bhi chalega): ' + g.extra.join(', ') + '</span>';
+  return out;
+}
+
 function refresh() {
   var done = 0, unsent = 0, newLeft = 0;
   document.querySelectorAll('.card').forEach(function (card, i) {
@@ -487,6 +533,8 @@ function refresh() {
     card.classList.toggle('sent', !!s.sent);
     var filled = baseCore(soc).filter(function (q) { return (val(soc, q.id) || '').trim() !== ''; }).length;
     var np = newPending(soc);
+    var gapBox = card.querySelector('.gap');
+    if (gapBox) gapBox.innerHTML = gapLine(soc);
     var base = s.sent ? 'bhej diya' : filled + '/' + baseCore(soc).length;
     card.querySelector('.cnt').textContent = base + (np ? '  ·  ' + np + ' naye sawaal' : '');
     if (d) { done++; if (!s.sent) unsent++; }
