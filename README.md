@@ -127,6 +127,24 @@ Evidence tier follows what the message says about how it was found:
 | `office se pucha` | C, reported |
 | neither | leave blank, which means it does not publish yet |
 
+## Deploying, and the cache
+
+GitHub Pages serves this HTML with `Cache-Control: max-age=600`, and that header is not ours
+to change. So for ten minutes after a push a phone can still be on the previous build, and a
+page left open or added to the home screen can hold one much longer. This is normal, not a
+fault, and it cost a round of confusion on 20 August 2026 when two deploys landed minutes
+apart and the tool looked unchanged.
+
+**Bump `BUILD` in `index.html` on every deploy.** It prints in the footer. That number is the
+only way to answer "is he looking at the old page?" without guessing: ask him to read it back.
+
+**To force a fresh copy immediately**, send the URL with a query string:
+`https://robertsingh1950.github.io/shivam-society-survey/?v=2`. The query string changes the
+browser's cache key, so the HTML is refetched. **`localStorage` is keyed by origin, not by
+URL**, so every answer already saved survives it — which is also why moving the tool to a
+different path or repo on the same `github.io` account would keep his data, and moving it to
+a different domain would lose all of it.
+
 ## Maintenance
 
 - **Society list** lives in the `SOCIETIES` array in `index.html`. Keep it in step with
