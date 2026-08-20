@@ -152,6 +152,34 @@ Evidence tier follows what the message says about how it was found:
   choice between annoying the team and not getting the answer. Guarded by check 7 in
   `selftest.mjs`, which asserts that a society completed before the new questions existed
   still reads as done while both new questions still count as pending.
+
+  **The `since` flag also has to reach `SHOWN`, and on 18 August it did not.** The card list
+  shows only what still needs work, and a finished, sent society was hidden. Excluding the
+  new questions from `isDone` therefore hid the only place they could be answered: the header
+  read `21 me 2 naye sawaal baaki` and pointed at twenty-one cards that were not on the page.
+  The 19 August CSV came back with both questions blank on all twenty-one, and filled only on
+  Nimai Greens, which had never been finished. `newPending(soc) > 0` is now part of the
+  `SHOWN` filter. Check 8 in `selftest.mjs` guards it in both directions: the card appears
+  while a new question is pending and hides again once it is answered.
+- **Re-check passes clear the disputed answer; they do not annotate it.** Learned 19 August
+  2026 on the ten conflicts in the website repo's `OWNER-DATA-REQUESTS.md` §2b. Those cards
+  carried a note saying what the website was missing, while the question underneath it was
+  already filled in with the answer that was in dispute. Nothing looked unanswered, so nothing
+  got re-answered and the export repeated the previous round byte for byte. A note cannot
+  reopen a filled question.
+
+  The `RECHECK` table near the top of the script names the societies and the question ids to
+  blank, and it runs **once**, behind `RECHECK_KEY` in `localStorage`. The guard is the whole
+  design: a second pass would wipe the answers the pass exists to collect. **A future re-check
+  adds a new dated key rather than reusing this one**, because reusing it silently does
+  nothing. Check 9 in `selftest.mjs` covers both the clear and the once.
+- **A contradictory answer stored before its fix shipped stays contradictory.** The 14 August
+  coupling between the maintenance rate and the collector fires on `change`, so it repairs
+  nothing that was answered earlier and never touched again. Ekta Enclave was exactly that
+  and exported both halves on 19 August. There is now a repair pass on load, added 20 August 2026, that blanks the
+  pair wherever it disagrees, keeping neither half, since there is no way to tell which is
+  right. **Any future coupling between two controls needs the same pair: a handler for new
+  answers and a repair pass for stored ones.** Check 10 in `selftest.mjs`.
 - **Getting everything out at once, added 18 August 2026.** WhatsApp still sends one society
   per message, which is right while filing as you go and wrong when the whole survey has to
   move in one piece. Three additional routes:

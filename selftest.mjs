@@ -190,4 +190,67 @@ const api = (s) => load(s);
   assert.equal(newPending(soc), 1, 'answering one new question must drop the pending count');
 }
 
-console.log('selftest: 8 checks passed, page script parses');
+// 8. A finished, sent society with a pending new question must stay on screen. Without this
+// the 18 August questions were counted in the header and had no card to open, which is how
+// twenty-one societies exported them blank on 19 August.
+{
+  const s = {};
+  const { SOCIETIES, baseCore, isDone, newPending } = api(s);
+  const shownSrc = grab(/var SHOWN = SOCIETIES\.filter\(function \(soc\) \{[\s\S]*?\n\}\);/);
+  const shown = new Function('state', 'SOCIETIES', 'isDone', 'newPending', shownSrc + '\nreturn SHOWN;');
+  const list = () => shown(s, SOCIETIES, isDone, newPending);
+
+  const soc = SOCIETIES.find((x) => !x.r && !x.x);
+  assert.ok(soc, 'need a society with no re-check note for this check');
+  const a = {};
+  baseCore(soc).forEach((q) => { a[q.id] = 'x'; });
+  s[soc.n] = { a, sent: true };
+  assert.equal(isDone(soc), true);
+  assert.ok(newPending(soc) > 0, 'the new questions are still unanswered here');
+  assert.ok(list().includes(soc), 'a done, sent society with a pending new question must be shown');
+
+  a.nocw = 'aadha aadha';
+  a.nocx = 'sinking fund';
+  assert.equal(newPending(soc), 0);
+  assert.ok(!list().includes(soc), 'once the new questions are answered it hides again');
+}
+
+// 9. The 20 August re-check clears the disputed answers, and clears them ONCE. A second pass
+// would wipe the very answers it exists to collect.
+{
+  const s = { Cosmos: { a: { maint: 'X per sq ft', mwho: 'RWA leti hai' }, sent: true } };
+  const store = {};
+  const ls = { getItem: (k) => (k in store ? store[k] : null), setItem: (k, v) => { store[k] = v; } };
+  const run = new Function('state', 'localStorage',
+    grab(/var RECHECK_KEY = [\s\S]*?setItem\(RECHECK_KEY, '1'\);\n\}/));
+
+  run(s, ls);
+  assert.equal(s.Cosmos.a.maint, '', 'the disputed answer must be blanked');
+  assert.equal(s.Cosmos.a.mwho, 'RWA leti hai', 'an undisputed answer on the same card stays');
+  assert.equal(s.Cosmos.sent, false, 'the society must reopen as unsent');
+
+  s.Cosmos.a.maint = 'Y per sq ft';
+  run(s, ls);
+  assert.equal(s.Cosmos.a.maint, 'Y per sq ft', 'a second pass must not wipe the re-answer');
+}
+
+// 10. A stored rate that disagrees with "nobody collects it" is blanked on load. Neither half
+// is kept, because there is no way to tell which one is right.
+{
+  const s = {
+    'Ekta Enclave': { a: { maint: 'koi nahi le raha', mwho: 'RWA leti hai' }, sent: true },
+    'Cosmos': { a: { maint: 'X per sq ft', mwho: 'RWA leti hai' }, sent: true },
+    'Terra Castle': { a: { maint: 'koi nahi le raha', mwho: 'koi nahi leta' }, sent: true },
+  };
+  const { SOCIETIES } = api(s);
+  const run = new Function('state', 'SOCIETIES',
+    grab(/SOCIETIES\.forEach\(function \(soc\) \{\n  var s = state\[soc\.n\][\s\S]*?\n\}\);/));
+  run(s, SOCIETIES);
+  assert.equal(s['Ekta Enclave'].a.maint, '', 'a contradictory pair loses the rate');
+  assert.equal(s['Ekta Enclave'].a.mwho, '', 'and loses the collector too');
+  assert.equal(s['Ekta Enclave'].sent, false, 'and reopens');
+  assert.equal(s.Cosmos.a.maint, 'X per sq ft', 'a rate with a collector is untouched');
+  assert.equal(s['Terra Castle'].a.mwho, 'koi nahi leta', 'a matching "nobody" pair is untouched');
+}
+
+console.log('selftest: 11 checks passed, page script parses');

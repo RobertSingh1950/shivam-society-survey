@@ -87,6 +87,14 @@ taaki sirf bacha hua kaam saamne rahe. Unka data safe hai, kuch dobara nahi bhar
   <b>bank loan</b>, <b>transfer / NOC</b>, <b>possession kab mili</b>, aur <b>society kahan
   par hai</b>.
   <br><br>
+  ⚠️ <b>Kuch societies jo aap bhej chuke the wo wapas khul gayi hain, aur ye humari galti
+  theek karne ke liye hai, aapki nahi.</b> In societies mein 11 August aur 14 August ke jawab
+  aapas mein alag the. Pichhli baar humne card par sirf likh diya tha ki kya alag hai, lekin
+  sawaal ka jawab pehle se bhara hua tha, isliye kuch badla hi nahi. Ab <b>sirf wahi sawaal
+  khaali kar diye gaye hain jinpar do jawab aaye the</b>. Baaki sab jaisa tha waisa hai.
+  Har aise card par 🟡 note mein likha hai ki kya alag tha. <b>Sirf wahi ek-do sawaal
+  bhariye aur Submit dabaiye.</b>
+  <br><br>
   🆕 List ke aakhir mein <b>gyarah nayi societies</b> jodi gayi hain. Ab hum Bhiwadi ki
   <b>har society cover kar rahe hain</b>, taaki koi naam chhoot na jaaye. Jo aapko sach
   mein pata ho wahi bhariye; <b>ek society jo aap achhe se jaante hain, chhe aadhi-adhuri
@@ -142,30 +150,30 @@ var OWNER_EMAIL = 'vikas@indianshelf.com';
 // repeated on all 32 cards: bank loan, transfer/NOC, possession year, and location.
 var SOCIETIES = [
   // ── Flats ────────────────────────────────────────────────────────────────────
-  { n: 'MVL Coral', k: 'flat', r: 'Maintenance (₹2 per sq ft, RWA) aur paani/light/lift website par aa chuka hai, dobara mat bhariye. NOC ka time aur charge abhi khaali hai.' },
+  { n: 'MVL Coral', k: 'flat', r: 'DOBARA POOCHHNA HAI: NOC ka charge. 11 August ko aapne bola tha "case ke hisaab se", 14 August ko "koi charge nahi". Jo sahi hai wahi bhariye, tab tak website par kuch nahi likha ja sakta.' },
   { n: 'HFL Presidency Estate', k: 'flat', r: 'Maintenance, transfer aur services aa chuke hain. Sabse zaroori: bank aur possession year.' },
-  { n: 'Cosmos', k: 'flat', r: 'Sirf paani/light/lift aaya tha. Maintenance kitna hai aur kaun leta hai, ye abhi website par nahi hai.' },
-  { n: 'Essentia', k: 'flat', r: 'Is society ka poora data hat gaya hai, website par abhi kuch nahi hai. Shuru se bhariye.' },
-  { n: 'Terra Elegance', k: 'flat', r: 'Maintenance ₹2.25 per sq ft aa chuka hai. Paani, light aur lift ka haal abhi khaali hai.' },
-  { n: 'Terra Heritage', k: 'flat', r: 'Maintenance (₹2.25, RWA 2024 se) aur paani/light aa chuke hain. Club house khula hai ya nahi, ye abhi bhi khaali hai.' },
-  { n: 'Terra Castle', k: 'flat', r: 'Maintenance (abhi koi nahi le raha) aur paani/light aa chuke hain. Baaki sab khaali.' },
+  { n: 'Cosmos', k: 'flat', r: 'DOBARA POOCHHNA HAI: maintenance. 11 August ko ₹2 per sq ft, 14 August ko ₹2.25 per sq ft aaya tha. Ek hi sahi hoga.' },
+  { n: 'Essentia', k: 'flat', r: 'DOBARA POOCHHNA HAI: maintenance. 11 August ko ₹2 per sq ft, 14 August ko ₹2.25 per sq ft aaya tha. Ek hi sahi hoga.' },
+  { n: 'Terra Elegance', k: 'flat', r: 'Maintenance ₹2.25 per sq ft, paani, light aur lift sab aa chuke hain. Yahan kuch dobara nahi bharna.' },
+  { n: 'Terra Heritage', k: 'flat', r: 'DOBARA POOCHHNA HAI: club house khula hai ya abhi ban raha hai? 11 August ko khula bataya tha, 14 August ko ban raha hai. Teen din me club house banta nahi, to ek jagah galat tick hua hai.' },
+  { n: 'Terra Castle', k: 'flat', r: 'Sab bhar gaya hai. Sirf 3 BHK ka kiraya khaali hai. Agar 3 BHK hai hi nahi to wahi likh dijiye.' },
   // ── Plots ────────────────────────────────────────────────────────────────────
   // 'Omaxe Medocity' was carried over from the photo tool and is dropped (owner, 13 Aug
   // 2026: "Omaxe Green Meadow City is main"). It was never an Omaxe product name: the
   // 4 August audit checked Omaxe's own Bhiwadi list and found Panorama City, Green Meadow
   // City, Marigold, Sunrise and Europia, with no Medocity anywhere. The website already
   // 301s /projects/omaxe-medocity/ to /projects/omaxe-green-meadow-city/.
-  { n: 'Omaxe Green Meadow City', k: 'plot', r: 'Is society ka poora data hat gaya hai. Shuru se bhariye.' },
+  { n: 'Omaxe Green Meadow City', k: 'plot', r: 'SEWER: agar sewer line bani hai to tick kar dijiye. Agar bani hi nahi hai to neeche "Aur kuch batana ho?" me likh dijiye, kyunki khaali chhodne se pata nahi chalta ki bani nahi hai ya aap skip kar gaye.' },
   { n: 'Omaxe Panorama City', k: 'plot' },
-  { n: 'VBHC', k: 'plot', z: 'Honda zone', r: 'Sirf itna hai ki BIDA ko handover ho chuka hai. Maintenance, RWA aur bank abhi khaali hain.' },
-  { n: 'Krish Season', k: 'plot', z: 'Honda zone', r: 'Sirf BIDA handover aaya hai. RWA bani hai ya nahi, maintenance kaun leta hai, bank kaun deta hai, teeno khaali.' },
-  { n: 'Ekta Enclave', k: 'plot', r: 'Is society ka poora data hat gaya hai. Handover BIDA ko hua ya builder ke paas hai, ye sabse pehle.' },
-  { n: 'Aqasia Homes', k: 'plot', r: 'Maintenance (naya project, koi nahi le raha) aur builder ke paas hona aa chuka hai. Sewer bana hai ya nahi, ye abhi bhi khaali hai.' },
-  { n: 'Terra City', k: 'plot', r: 'Sirf BIDA handover aaya hai. Maintenance kitna aur kaun leta hai, ye khaali hai. Chanderlok se compare kar lijiye.' },
-  { n: 'Lifestyle City', k: 'plot', r: 'Sirf itna hai ki abhi builder ke paas hai. Maintenance aur bank dono khaali hain.' },
-  { n: 'Chanderlok City', k: 'plot', r: 'Sirf BIDA handover aaya hai. Maintenance, RWA aur bank khaali. Terra City se compare kar lijiye.' },
+  { n: 'VBHC', k: 'plot', z: 'Honda zone', r: 'DOBARA POOCHHNA HAI: bank. HDFC ke alawa kaun deta hai? 11 August ko SBI aaya tha, 14 August ko ICICI. Isliye abhi sirf HDFC website par hai.' },
+  { n: 'Krish Season', k: 'plot', z: 'Honda zone', r: 'DOBARA POOCHHNA HAI: RWA bani hai ya nahi, maintenance kitna hai aur kaun leta hai, aur bank kaun se hain. 11 August ko "RWA nahi bani" aaya tha, 14 August ko "registered RWA ₹5 per gaj le rahi hai". Bank me bhi HDFC ke alawa dono baar alag naam aaye.' },
+  { n: 'Ekta Enclave', k: 'plot', r: 'DOBARA POOCHHNA HAI: handover BIDA ko ho gaya ya abhi builder ke paas hai? 11 August ko builder, 14 August ko BIDA aaya tha. Kharidne wale ka vakil sabse pehle yahi dekhta hai. Maintenance bhi dobara bhariye, kyunki rate aur "koi nahi leta" dono ek saath aa gaye the.' },
+  { n: 'Aqasia Homes', k: 'plot', r: 'Maintenance (naya project, koi nahi le raha) aur builder ke paas hona aa chuka hai. SEWER: bani hai to tick kar dijiye, nahi bani to neeche "Aur kuch batana ho?" me likh dijiye. Khaali chhodne se pata nahi chalta.' },
+  { n: 'Terra City', k: 'plot', r: 'DOBARA POOCHHNA HAI: maintenance kitna aur kis hisaab se? 11 August ko ₹2 per sq ft, 14 August ko ₹5 per gaj. Plot colony me aam taur par gaj ka hisaab chalta hai. Chanderlok City ka jawab usi din ulta pad gaya tha, to dhyan se dekh lijiye ki dono aapas me badal to nahi gaye.' },
+  { n: 'Lifestyle City', k: 'plot', r: 'DOBARA POOCHHNA HAI: SBI is project par loan deta hai ya nahi? 11 August ko aapne bola tha SBI nahi deta, 14 August ko SBI naam me aa gaya. "Falana bank loan nahi deta" website par sabse bhaari baat hoti hai, isliye jab tak pakka na ho hum kuch nahi likhenge. Stock ka jawab bhi khaali hai.' },
+  { n: 'Chanderlok City', k: 'plot', r: 'DOBARA POOCHHNA HAI: maintenance kitna, kaun leta hai, aur RWA registered hai ya sirf committee? 11 August ko "₹5 per gaj, 2017 se registered RWA" aaya tha, 14 August ko "₹2 per sq ft, koi nahi leta, sirf committee". Poora ulta ho gaya. Terra City usi din ulta pad gaya tha, dono aapas me badal to nahi gaye? Jagah ka naam bhi khaali hai.' },
   { n: 'Reverence (Ashadeep)', k: 'plot', r: 'Maintenance (naya project) aur builder ke paas hona aa chuka hai. NOC ka time abhi khaali hai.' },
-  { n: 'MGH Anandam', k: 'plot', z: 'Dharuhera', r: 'Maintenance ₹7 per gaj aur DDJAY colony hona aa chuka hai. DTCP licence number chahiye.' },
+  { n: 'MGH Anandam', k: 'plot', z: 'Dharuhera', r: 'Maintenance ₹7 per gaj aur DDJAY colony hona aa chuka hai. DTCP licence number chahiye, aur jagah ka naam bhi khaali hai.' },
   { n: 'AMD City', k: 'plot', z: 'Dharuhera', r: 'Poora data hat gaya hai. DTCP licence number bhi chahiye.' },
   { n: 'Tulip City', k: 'plot', z: 'Dharuhera', r: 'Poora data hat gaya hai. DTCP licence number bhi chahiye.' },
   { n: 'Dwarkadish', k: 'plot', z: 'Dharuhera', r: 'Poora data hat gaya hai. DTCP licence number bhi chahiye.' },
@@ -300,6 +308,54 @@ SOCIETIES.filter(function (s) { return s.k !== 'plot'; }).forEach(function (soc)
   // Only the ones left with a hole need resending; a clean carry-across is already filed.
   if (!a.water || !a.lift || !a.backup) state[soc.n].sent = false;
 });
+
+// ── Re-check pass, 20 August 2026 ────────────────────────────────────────────
+// The 14 August round disagreed with the 11 August round on the answers below, and the
+// 19 August export repeated 14 August byte for byte without settling any of them. That was
+// not him. The card carried a note about what the WEBSITE was missing while the question
+// underneath it was already filled in with the answer that is in dispute, so nothing looked
+// unanswered and nothing got re-answered. A note cannot reopen a filled question.
+//
+// So the disputed answers are cleared instead, exactly the way the contradictory services
+// pairs were cleared on 14 August, which is the one thing that has been shown to work: the
+// society reopens as incomplete with those questions empty and he answers them again.
+//
+// Runs ONCE. The flag has to be checked, because a second pass would wipe the very answers
+// this pass exists to collect. A future re-check adds a new flag rather than reusing this
+// one; the answers keys are the same, so reusing it would silently do nothing.
+var RECHECK_KEY = 'shivam-society-recheck-2026-08-20';
+var RECHECK = {
+  'Cosmos': ['maint'],
+  'Essentia': ['maint'],
+  'Terra City': ['maint', 'mwho'],
+  'Chanderlok City': ['maint', 'mwho', 'rwa'],
+  'Lifestyle City': ['bank'],
+  'Krish Season': ['maint', 'mwho', 'rwa', 'bank'],
+  'Ekta Enclave': ['hand'],
+  'Terra Heritage': ['club'],
+  'MVL Coral': ['nocc'],
+  'VBHC': ['bank']
+};
+if (!localStorage.getItem(RECHECK_KEY)) {
+  Object.keys(RECHECK).forEach(function (n) {
+    var s = state[n]; if (!s || !s.a) return;
+    RECHECK[n].forEach(function (q) { s.a[q] = ''; });
+    s.sent = false;
+  });
+  localStorage.setItem(RECHECK_KEY, '1');
+}
+
+// A rate and "nobody collects it" cannot both be true. The 14 August fix couples the two
+// controls when either one CHANGES, which protects everything answered since and repairs
+// nothing answered before. Ekta Enclave was filled on 11 August and never touched again, so
+// the coupling never fired and it exported both halves on 19 August. Blank the pair wherever
+// it disagrees; we do not know which half is right, so neither is kept. Runs on every load,
+// which is safe: a repaired pair cannot disagree again once the coupling is doing its job.
+SOCIETIES.forEach(function (soc) {
+  var s = state[soc.n]; if (!s || !s.a) return;
+  var none = s.a.maint === 'koi nahi le raha', nobody = s.a.mwho === 'koi nahi leta';
+  if (s.a.maint && s.a.mwho && none !== nobody) { s.a.maint = ''; s.a.mwho = ''; s.sent = false; }
+});
 localStorage.setItem(KEY, JSON.stringify(state));
 
 var grid = document.getElementById('grid');
@@ -341,8 +397,15 @@ function field(soc, q) {
 // reappears the moment anything reopens it. Twenty-one green cards to scroll past is how a
 // re-check gets missed. Computed once at load, so a card never vanishes under his thumb
 // while he is still filling it in.
+// `newPending` is in the filter as of 20 August 2026, and its absence was a real cost. The
+// two charge questions added on 18 August are deliberately excluded from the done count so
+// that adding a question mid-survey does not flip twenty-one finished societies back to
+// incomplete. But finished-and-sent societies were also hidden, so those twenty-one had no
+// card to open: the header said "21 me 2 naye sawaal baaki" and pointed at nothing. Only
+// Nimai Greens, which was never finished, answered them. A pending new question now keeps
+// the card on screen. It still counts as done and it still sends.
 var SHOWN = SOCIETIES.filter(function (soc) {
-  return soc.r || !isDone(soc) || !(state[soc.n] || {}).sent;
+  return soc.r || !isDone(soc) || newPending(soc) > 0 || !(state[soc.n] || {}).sent;
 });
 var HIDDEN = SOCIETIES.length - SHOWN.length;
 
