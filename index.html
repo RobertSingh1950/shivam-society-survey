@@ -4,6 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
+<!-- GitHub Pages serves this with Cache-Control: max-age=600 and that header is not ours to
+     change, so a phone can sit on a ten-minute-old copy, and a page kept open or added to the
+     home screen can hold one far longer. These are the only cache instructions the document
+     itself can give. They are not a guarantee: the version stamp in the footer is how you
+     actually tell, and ?v= on the URL is how you force a fresh copy. -->
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>Shivam Properties — Society Details</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -125,7 +133,10 @@ Har card par upar likha hai ki <b>us society mein kya baaki hai</b>.</p>
 <div class="pend" id="pend"></div>
 <div class="grid" id="grid"></div>
 
-<p class="foot">Photo wala tool alag hai:
+<p class="foot">Version: <b id="build"></b> — agar ye number purana lage to page ko
+<b>refresh</b> kar dijiye (neeche kheech kar chhodiye). Aapka bhara hua data refresh se
+nahi jaata, wo phone mein safe rehta hai.
+<br><br>Photo wala tool alag hai:
 <a href="https://robertsingh1950.github.io/shivam-photo-review/">photo details</a></p>
 
 <div class="bar">
@@ -138,6 +149,12 @@ Har card par upar likha hai ki <b>us society mein kya baaki hai</b>.</p>
 <div class="toast" id="toast"></div>
 
 <script>
+// Bump this on every deploy. It is printed in the footer, and it is the only way to answer
+// "is he looking at the old page?" without guessing: he reads the number back. Pages caches
+// the HTML for ten minutes, so a stale copy is normal rather than a fault, and a version he
+// can see turns a support question into one glance.
+var BUILD = '20 Aug 2026 · 4';
+
 // Owner's WhatsApp. Same number the photo tool sends to, so everything lands in one place.
 var VIKAS_WA = '918570009071';
 // Where the CSV is emailed. Same person as the WhatsApp number above.
@@ -852,6 +869,7 @@ document.getElementById('docBtn').addEventListener('click', function () {
   } else { toast('Copy nahi hua'); }
 });
 
+document.getElementById('build').textContent = BUILD;
 refresh();
 </script>
 </body>
