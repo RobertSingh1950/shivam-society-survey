@@ -64,6 +64,12 @@
      that the moment every card wears it. */
   .rc.gap { background: #161b24; border-color: #2b3342; color: #9aa3b2; }
   .rc.gap b { color: #e8eaf0; }
+  /* Answers he has already given, folded away. Present so a re-check can change one, quiet
+     so it never competes with the questions that still need him. */
+  .have > summary { list-style: none; cursor: pointer; padding: 2px 0; }
+  .have > summary::-webkit-details-marker { display: none; }
+  .have > summary:before { content: "▸ "; }
+  .have[open] > summary:before { content: "▾ "; }
   /* Each society sends itself. One message per society can never be truncated, and the
      button sits where the answers are, so there is nothing to hunt for at the bottom. */
   .send { width: 100%; margin-top: 16px; padding: 13px 10px; border: 0; border-radius: 10px;
@@ -439,6 +445,7 @@ var HIDDEN = SOCIETIES.length - SHOWN.length;
 
 SHOWN.forEach(function (soc) {
   var s = state[soc.n] || {};
+  var qs = answered(soc);
   var card = document.createElement('details');
   card.className = 'card';
   card.innerHTML =
@@ -466,7 +473,23 @@ SHOWN.forEach(function (soc) {
         '<label class="chip' + (s.visited ? ' on' : '') + '"><input type="checkbox" data-soc="' + esc(soc.n) + '" data-meta="visited"' + (s.visited ? ' checked' : '') + '>main khud gaya tha</label>' +
         '<label class="chip' + (s.office ? ' on' : '') + '"><input type="checkbox" data-soc="' + esc(soc.n) + '" data-meta="office"' + (s.office ? ' checked' : '') + '>office / guard se pucha</label>' +
       '</div>' +
-      core(soc).map(function (q) { return field(soc, q); }).join('') +
+      // ONLY the questions we still need. Owner instruction, 20 August 2026: "if you have
+      // answer of any card don't show him that card, only show the card for which you
+      // actually need answer." The same rule inside the card is what makes it real. Most
+      // societies are missing two answers out of thirteen, and rendering all thirteen made
+      // him scroll past eleven he had already given to find them. That is how the last round
+      // went out untouched.
+      //
+      // The answered ones are folded away rather than dropped, because a re-check exists
+      // precisely to change an answer that is already there, and a question he cannot reach
+      // is a question he cannot correct.
+      qs.need.map(function (q) { return field(soc, q); }).join('') +
+      (qs.have.length
+        ? '<details class="r2 have"><summary class="r2h">Pehle se bhare hue ' + qs.have.length +
+          ' jawab — badalna ho to kholiye</summary>' +
+          '<div class="r2n">Ye sab safe hain. Inhe haath lagane ki zaroorat nahi.</div>' +
+          qs.have.map(function (q) { return field(soc, q); }).join('') + '</details>'
+        : '') +
       '<div class="r2"><div class="r2h">Extra (zaroori nahi)</div>' +
       '<div class="r2n">Bhare bina bhi society poori ginti hai.</div>' +
       EXTRA.map(function (q) { return field(soc, q); }).join('') + '</div>' +
@@ -514,6 +537,17 @@ function isDone(soc) {
 // round is filed, while a gap computes itself and cannot disagree with the form under it.
 // The extras are named separately because they do not block the Submit button, so listing
 // them beside the required ones would misrepresent what is actually being asked for.
+// Splits a society's questions into the ones we still need and the ones we already hold.
+// Computed once per card at render time, from the state as it stands AFTER the load-time
+// passes have run, so a question the re-check blanked correctly counts as needed again.
+function answered(soc) {
+  var need = [], have = [];
+  core(soc).forEach(function (q) {
+    ((val(soc, q.id) || '').trim() === '' ? need : have).push(q);
+  });
+  return { need: need, have: have };
+}
+
 function gaps(soc) {
   var empty = function (q) { return (val(soc, q.id) || '').trim() === ''; };
   return { need: core(soc).filter(empty).map(function (q) { return short(q.id); }),
