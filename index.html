@@ -153,7 +153,33 @@ nahi jaata, wo phone mein safe rehta hai.
 // "is he looking at the old page?" without guessing: he reads the number back. Pages caches
 // the HTML for ten minutes, so a stale copy is normal rather than a fault, and a version he
 // can see turns a support question into one glance.
-var BUILD = '20 Aug 2026 · 4';
+var BUILD = '20 Aug 2026 · 5';
+
+var HELD_STAMP = '19 August 2026';
+var HELD = {
+  "MVL Coral": {"visited":true,"a":{"maint":"₹2 per sq ft","mwho":"RWA leti hai","rwa":"registered RWA hai","noct":"2 hafte","nocc":"koi charge nahi","bank":"SBI, HDFC, ICICI, PNB","water":"paani 24 ghante","backup":"backup chalta hai","lift":"lift theek hai","club":"khula hai, chal raha hai","year":"2015 se pehle","stock":"haan hai","loc":"Main alwar bypass opposite genisis mall","rent":"2bhk ff 18k , 3bhk 25k"}},
+  "HFL Presidency Estate": {"visited":true,"a":{"maint":"koi nahi le raha","mwho":"koi nahi leta","rwa":"nahi bani","noct":"2 hafte","nocc":"case ke hisaab se","bank":"SBI, HDFC, ICICI","water":"paani 24 ghante","backup":"backup chalta hai","lift":"lift theek hai","club":"abhi ban raha hai","year":"2018-2021","stock":"haan hai","loc":"Opposite terra herritage","rent":"2bhk , ff 13k 3bhk ff 20k"}},
+  "Cosmos": {"visited":true,"a":{"maint":"₹2.25 per sq ft","mwho":"RWA leti hai","rwa":"registered RWA hai","noct":"2 hafte","nocc":"case ke hisaab se","bank":"SBI, HDFC, ICICI, PNB","water":"paani 24 ghante","backup":"backup chalta hai","lift":"lift theek hai","club":"khula hai, chal raha hai","year":"2021-2024","stock":"haan hai","loc":"Opposite konark oasis","rent":"2bhk ff 15k 3bhk ff 22k"}},
+  "Essentia": {"visited":true,"a":{"maint":"₹2.25 per sq ft","mwho":"RWA leti hai","rwa":"registered RWA hai","noct":"2 hafte","nocc":"case ke hisaab se","bank":"SBI, HDFC, ICICI, PNB, Axis","water":"paani 24 ghante","backup":"backup chalta hai","lift":"lift theek hai","club":"khula hai, chal raha hai","year":"2015-2018","stock":"haan hai","loc":"Opposite power greed","rent":"2bhk 16k 3bhk 24k"}},
+  "Terra Elegance": {"visited":true,"a":{"maint":"₹2.25 per sq ft","mwho":"RWA leti hai","rwa":"registered RWA hai","noct":"2 hafte","nocc":"case ke hisaab se","bank":"SBI, HDFC, ICICI, PNB, Axis","water":"paani 24 ghante","backup":"backup chalta hai","lift":"lift theek hai","club":"khula hai, chal raha hai","year":"2021-2024","stock":"haan hai","loc":"Alwar bypass opposite omaxe medocity","rent":"2bhk 12k 3bhk 17k"}},
+  "Terra Heritage": {"visited":true,"a":{"maint":"₹2.25 per sq ft","mwho":"RWA leti hai","rwa":"registered RWA hai","noct":"2 hafte","nocc":"case ke hisaab se","bank":"SBI, HDFC, ICICI, PNB","water":"paani 24 ghante","backup":"backup chalta hai","lift":"lift theek hai","club":"abhi ban raha hai","year":"2021-2024","stock":"haan hai","loc":"Alwar bypass opposite Presidency estate","rent":"2bhk 12k 3bhk 17k"}},
+  "Terra Castle": {"visited":true,"a":{"maint":"koi nahi le raha","mwho":"koi nahi leta","rwa":"nahi bani","noct":"2 hafte","nocc":"case ke hisaab se","bank":"HDFC, ICICI","water":"paani 24 ghante","backup":"backup chalta hai","lift":"lift theek hai","club":"abhi ban raha hai","year":"2024 ke baad","stock":"haan hai","loc":"Alwar bypass after tapukara","rent":"2bhk 9k 3bhk"}},
+  "Omaxe Green Meadow City": {"visited":true,"a":{"maint":"₹7 per gaj","mwho":"RWA leti hai","rwa":"registered RWA hai","noct":"2 hafte","nocc":"koi charge nahi","bank":"SBI, HDFC, ICICI, PNB","year":"2018-2021","stock":"haan hai","loc":"Alwar bypass opposite terra elegence","serv":"sadak bani hai, paani connection hai, paani boring se, bijli meter lag jaata hai","hand":"BIDA ko ho gaya"}},
+  "Omaxe Panorama City": {"visited":true,"a":{"maint":"₹7 per gaj","mwho":"RWA leti hai","rwa":"registered RWA hai","noct":"2 hafte","nocc":"koi charge nahi","bank":"SBI, HDFC, ICICI, PNB","year":"2015-2018","stock":"haan hai","loc":"Opposite terra elegence","serv":"sadak bani hai, sewer bana hai, paani connection hai, paani boring se, bijli meter lag jaata hai","hand":"BIDA ko ho gaya"}},
+  "VBHC": {"visited":true,"a":{"maint":"₹5 per gaj","mwho":"koi nahi leta","rwa":"sirf committee hai","noct":"2 hafte","nocc":"case ke hisaab se","bank":"HDFC, ICICI","year":"2018-2021","stock":"haan hai","loc":"Honda chowk k pass","serv":"sadak bani hai, sewer bana hai, paani connection hai, paani boring se, bijli meter lag jaata hai","hand":"BIDA ko ho gaya"}},
+  "Krish Season": {"visited":true,"a":{"maint":"₹5 per gaj","mwho":"RWA leti hai","rwa":"registered RWA hai","noct":"2 hafte","nocc":"koi charge nahi","bank":"HDFC, ICICI","year":"2021-2024","stock":"haan hai","loc":"Honda chowk k pass","serv":"sadak bani hai, sewer bana hai, paani boring se, paani connection hai, bijli meter lag jaata hai","hand":"BIDA ko ho gaya"}},
+  "Ekta Enclave": {"visited":true,"a":{"maint":"koi nahi le raha","mwho":"RWA leti hai","rwa":"registered RWA hai","noct":"2 hafte","nocc":"case ke hisaab se","bank":"SBI, HDFC, ICICI, PNB","year":"2021-2024","stock":"haan hai","loc":"Tapukra","serv":"sadak bani hai, sewer bana hai, paani connection hai, paani boring se, bijli meter lag jaata hai","hand":"BIDA ko ho gaya"}},
+  "Aqasia Homes": {"visited":true,"a":{"maint":"koi nahi le raha","mwho":"koi nahi leta","rwa":"nahi bani","noct":"2 hafte","nocc":"case ke hisaab se","bank":"HDFC, ICICI","year":"abhi tak nahi","stock":"haan hai","loc":"Tapukra","serv":"sadak bani hai, paani connection hai","hand":"abhi builder ke paas hai"}},
+  "Terra City": {"visited":true,"a":{"maint":"₹5 per gaj","mwho":"RWA leti hai","rwa":"registered RWA hai","noct":"2 hafte","nocc":"case ke hisaab se","bank":"SBI, HDFC, ICICI","year":"2021-2024","stock":"haan hai","loc":"Near kajaria plant","serv":"sadak bani hai, sewer bana hai, paani connection hai, paani boring se, bijli meter lag jaata hai","hand":"BIDA ko ho gaya"}},
+  "Lifestyle City": {"visited":true,"a":{"maint":"₹7 per gaj","mwho":"builder leta hai","rwa":"nahi bani","noct":"2 hafte","nocc":"case ke hisaab se","bank":"SBI, HDFC, ICICI, PNB","year":"2021-2024","loc":"Opposite terra city","serv":"sadak bani hai, sewer bana hai, paani connection hai, paani boring se, bijli meter lag jaata hai","hand":"abhi builder ke paas hai"}},
+  "Chanderlok City": {"visited":true,"a":{"maint":"₹2 per sq ft","mwho":"koi nahi leta","rwa":"sirf committee hai","noct":"2 hafte","nocc":"case ke hisaab se","bank":"HDFC, ICICI, SBI","year":"2018-2021","stock":"haan hai","serv":"sadak bani hai, sewer bana hai, paani connection hai, bijli meter lag jaata hai","hand":"BIDA ko ho gaya"}},
+  "Reverence (Ashadeep)": {"visited":true,"a":{"maint":"koi nahi le raha","mwho":"koi nahi leta","rwa":"nahi bani","noct":"pata nahi","nocc":"koi charge nahi","bank":"HDFC","year":"abhi tak nahi","stock":"haan hai","serv":"sadak bani hai, sewer bana hai","hand":"abhi builder ke paas hai"}},
+  "MGH Anandam": {"visited":true,"a":{"maint":"₹7 per gaj","mwho":"RWA leti hai","rwa":"registered RWA hai","noct":"2 hafte","nocc":"case ke hisaab se","bank":"HDFC, ICICI","year":"2021-2024","stock":"haan hai","serv":"sadak bani hai, sewer bana hai, paani connection hai, paani boring se, bijli meter lag jaata hai","hand":"DDJAY colony hai"}},
+  "AMD City": {"visited":true,"a":{"maint":"₹7 per gaj","mwho":"builder leta hai","rwa":"nahi bani","noct":"2 hafte","nocc":"case ke hisaab se","bank":"HDFC, ICICI","year":"2021-2024","stock":"haan hai","loc":"Dharuhera","serv":"sadak bani hai, sewer bana hai, paani connection hai, paani boring se, bijli meter lag jaata hai","hand":"DDJAY colony hai"}},
+  "Tulip City": {"visited":true,"a":{"maint":"₹5 per gaj","mwho":"builder leta hai","rwa":"sirf committee hai","noct":"2 hafte","nocc":"case ke hisaab se","bank":"SBI, HDFC, ICICI","year":"2021-2024","stock":"haan hai","loc":"Alwar bypass ashadeep k pass","serv":"sadak bani hai, sewer bana hai, paani connection hai, paani boring se, bijli meter lag jaata hai","hand":"DDJAY colony hai"}},
+  "Dwarkadish": {"visited":true,"a":{"maint":"₹5 per gaj","mwho":"RWA leti hai","rwa":"registered RWA hai","noct":"2 hafte","nocc":"case ke hisaab se","bank":"SBI, HDFC, ICICI, PNB, Axis","year":"2018-2021","stock":"haan hai","loc":"Nh 919 highway","serv":"sadak bani hai, sewer bana hai, paani connection hai, paani boring se, bijli meter lag jaata hai","hand":"DDJAY colony hai"}},
+  "Nimai Greens": {"visited":true,"a":{"maint":"₹2.25 per sq ft","mwho":"RWA leti hai","rwa":"registered RWA hai","noct":"1 hafta","nocc":"case ke hisaab se","bank":"SBI, HDFC, ICICI, PNB","nocw":"bechne wala deta hai","nocx":"poora maintenance clear karao, aur kuch nahi maangti","water":"paani 24 ghante","backup":"backup chalta hai","lift":"lift theek hai","club":"khula hai, chal raha hai","year":"2018-2021","stock":"haan hai","loc":"Opposite power Greed bhiwadi","rent":"2bhk 18k 3bhk 25k"}},
+};
 
 // Owner's WhatsApp. Same number the photo tool sends to, so everything lands in one place.
 var VIKAS_WA = '918570009071';
@@ -325,6 +351,38 @@ var KEY = 'shivam-society-facts-v3';
 var PART_KEY = 'shivam-society-part';
 var state = {};
 try { state = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) { state = {}; }
+
+// ── Seed from what we already hold, 20 August 2026 ───────────────────────────
+// Until now the tool knew only what was in THIS browser's localStorage. Open it on any other
+// device and 264 answers he had already given looked unanswered: thirty-two societies, every
+// question blank, and the gap list dutifully reporting that everything was missing. That is
+// not a display bug, it is the tool asking him to do the whole survey again.
+//
+// HELD is the last filed round, generated from the CSV in the website repo's survey document
+// rather than typed, so it is the same answers we published. It seeds any question this
+// browser has no answer for.
+//
+// LOCAL ALWAYS WINS. We only ever fill a blank, never overwrite, because anything in this
+// browser is either newer than the last filed round or is the round itself. Getting this
+// backwards would silently replace a fresh answer with the stale one it was correcting.
+//
+// This runs BEFORE the re-check pass on purpose: seed everything, then blank exactly the
+// disputed questions, so a conflict reopens on every device rather than only on his phone.
+//
+// REGENERATE THIS after filing a round, or it goes stale in the one direction that hurts:
+// it would re-seed an answer he has since corrected. See the README.
+SOCIETIES.forEach(function (soc) {
+  var h = HELD[soc.n]; if (!h) return;
+  var s = state[soc.n] || (state[soc.n] = { a: {} });
+  s.a = s.a || {};
+  Object.keys(h.a).forEach(function (q) {
+    if ((s.a[q] || '').trim() === '') s.a[q] = h.a[q];
+  });
+  if (s.visited === undefined) s.visited = h.visited;
+  // Seeded answers are already filed, so they are not waiting to be sent. A society he has
+  // genuinely edited on this device keeps whatever sent flag it had.
+  if (s.sent === undefined) s.sent = true;
+});
 
 // Migration for the flat services split, 14 August 2026. Everything already filled is
 // carried across so no society drops out of the done count, EXCEPT where both halves of a

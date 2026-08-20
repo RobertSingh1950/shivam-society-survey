@@ -127,6 +127,30 @@ Evidence tier follows what the message says about how it was found:
 | `office se pucha` | C, reported |
 | neither | leave blank, which means it does not publish yet |
 
+## HELD: what we already hold, and why it has to be in the page
+
+Until 20 August 2026 the only record of an answer was `localStorage` in the one browser that
+typed it. Open the tool anywhere else and all 264 filed answers read as blank: thirty-two
+societies, every question empty, the gap list correctly reporting that everything was
+missing. That is not a display fault, it is the tool asking for the whole survey again, and
+it would have happened the first time he changed phone or cleared his browser.
+
+`HELD` is the last filed round embedded in the page, **generated from the CSV fence in the
+website repo's `docs/ops/society-survey-<date>.md`, never typed**. On load it fills any
+question this browser has no answer for.
+
+- **Local always wins.** Seeding only ever fills a blank. Anything already in this browser is
+  either newer than the last filed round or is that round, so overwriting would replace a
+  fresh answer with the stale one it was correcting.
+- **It runs before the re-check pass**, so a disputed answer is seeded and then blanked, and
+  a conflict reopens on every device rather than only on his phone.
+- **Regenerate it after filing a round.** This is the one way it can hurt: left stale, it
+  re-seeds an answer he has since corrected. Same failure mode as the hand-written notes
+  deleted the same day, which is why it is generated rather than maintained.
+
+Check 13 in `selftest.mjs` covers all three: a blank browser gets the filed round, a local
+answer survives seeding, and a disputed answer still ends up empty.
+
 ## Deploying, and the cache
 
 GitHub Pages serves this HTML with `Cache-Control: max-age=600`, and that header is not ours

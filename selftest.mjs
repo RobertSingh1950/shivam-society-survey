@@ -299,4 +299,41 @@ const loadGaps = new Function('state', gapSrc +
   });
 }
 
-console.log('selftest: 13 checks passed, page script parses');
+// 13. The tool must know what we already hold on ANY device, not only on the phone that
+// typed it. Before 20 August 2026 the state lived solely in one browser's localStorage, so
+// opening the tool anywhere else showed 264 already-given answers as blank and asked him to
+// redo the whole survey. HELD seeds them. The rule that makes it safe is that LOCAL WINS:
+// seeding may only fill a blank, never overwrite, because anything in this browser is either
+// newer than the last filed round or is that round.
+{
+  const seedSrc = [grab(/var SOCIETIES = \[[\s\S]*?\n\];/), grab(/var HELD_STAMP = '[^']*';\nvar HELD = \{[\s\S]*?\n\};/),
+    grab(/SOCIETIES\.forEach\(function \(soc\) \{\n  var h = HELD\[soc\.n\][\s\S]*?\n\}\);/)].join('\n');
+  const seed = new Function('state', seedSrc + '\nreturn HELD;');
+
+  // A browser that has never seen the tool ends up with the filed round.
+  const fresh = {};
+  const HELD = seed(fresh);
+  assert.ok(Object.keys(HELD).length >= 22, 'HELD must carry the filed round');
+  assert.equal(fresh.Cosmos.a.noct, '2 hafte', 'a blank browser must be seeded from HELD');
+  assert.equal(fresh.Cosmos.sent, true, 'a seeded society is already filed, not waiting to send');
+  assert.equal(fresh.Cosmos.visited, true, 'the visit marker is what makes a finding tier B');
+
+  // A newer local answer must survive seeding. This is the direction that loses data.
+  const local = { Cosmos: { a: { noct: '1 mahina' }, sent: false } };
+  seed(local);
+  assert.equal(local.Cosmos.a.noct, '1 mahina', 'seeding must never overwrite a local answer');
+  assert.equal(local.Cosmos.sent, false, 'nor a local sent flag');
+  assert.ok(local.Cosmos.a.bank, 'but it still fills the blanks around it');
+
+  // Seeding runs BEFORE the re-check, so a conflict reopens on every device rather than only
+  // on his phone. Run them in page order and the disputed answer must end up empty.
+  const both = {};
+  seed(both);
+  const store = {};
+  new Function('state', 'localStorage', grab(/var RECHECK_KEY = [\s\S]*?setItem\(RECHECK_KEY, '1'\);\n\}/))(
+    both, { getItem: (k) => (k in store ? store[k] : null), setItem: (k, v) => { store[k] = v; } });
+  assert.equal(both.Cosmos.a.maint, '', 'the disputed answer must be blank even on a fresh device');
+  assert.equal(both.Cosmos.a.bank, 'SBI, HDFC, ICICI, PNB', 'while the undisputed ones stay seeded');
+}
+
+console.log('selftest: 14 checks passed, page script parses');
