@@ -100,7 +100,7 @@ Har card par upar likha hai ki <b>us society mein kya baaki hai</b>.</p>
   Har aise card par 🟡 note mein likha hai ki kya alag tha. <b>Sirf wahi ek-do sawaal
   bhariye aur Submit dabaiye.</b>
   <br><br>
-  🆕 List ke aakhir mein <b>gyarah nayi societies</b> jodi gayi hain. Ab hum Bhiwadi ki
+  🆕 List ke aakhir mein <b><span id="freshN">kuch</span> nayi societies</b> jodi gayi hain. Ab hum Bhiwadi ki
   <b>har society cover kar rahe hain</b>, taaki koi naam chhoot na jaaye. Jo aapko sach
   mein pata ho wahi bhariye; <b>ek society jo aap achhe se jaante hain, chhe aadhi-adhuri
   se behtar hai.</b>
@@ -428,7 +428,13 @@ function field(soc, q) {
 // The rule this encodes: a society is on this screen only if it is missing something.
 var SHOWN = SOCIETIES.filter(function (soc) {
   return !isDone(soc) || newPending(soc) > 0 || !(state[soc.n] || {}).sent;
-});
+})
+// Ordered by what it costs us to not have, because a round is finite and he works down the
+// page. A card carrying an `r` is a conflict holding a live page hostage, so it is worth
+// more than any number of blank fields; a society we have never surveyed is worth the least
+// per answer, because it needs photos and a legal identity before it can become a page
+// anyway. Stable sort, so within a band the original grouping survives.
+  .sort(function (a, b) { return (a.r ? 0 : a.x ? 2 : 1) - (b.r ? 0 : b.x ? 2 : 1); });
 var HIDDEN = SOCIETIES.length - SHOWN.length;
 
 SHOWN.forEach(function (soc) {
@@ -546,6 +552,12 @@ function refresh() {
       : s.sent ? '✅ Bhej diya — dobara bhejna ho to dabaiye'
       : '✅ Ye society WhatsApp pe bhejo';
   });
+  // Typed-in counts go stale. This one said "gyarah" while ten were on screen, because
+  // Nimai Greens had been finished and dropped off.
+  var fresh = document.getElementById('freshN');
+  if (fresh) fresh.textContent = ({ 1: 'ek', 2: 'do', 3: 'teen', 4: 'chaar', 5: 'paanch', 6: 'chhe',
+    7: 'saat', 8: 'aath', 9: 'nau', 10: 'das', 11: 'gyarah' })[SHOWN.filter(function (s) { return s.x; }).length]
+    || String(SHOWN.filter(function (s) { return s.x; }).length);
   document.getElementById('progress').textContent = SHOWN.length
     ? done + ' / ' + SHOWN.length + ' society done' +
       (newLeft ? '   ·   ' + newLeft + ' me 2 naye sawaal baaki' : '') +

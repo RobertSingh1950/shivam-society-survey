@@ -202,7 +202,7 @@ const loadGaps = new Function('state', gapSrc +
 {
   const s = {};
   const { SOCIETIES, baseCore, isDone, newPending } = api(s);
-  const shownSrc = grab(/var SHOWN = SOCIETIES\.filter\(function \(soc\) \{[\s\S]*?\n\}\);/);
+  const shownSrc = grab(/var SHOWN = SOCIETIES\.filter\([\s\S]*?\.sort\(function \(a, b\) \{[^}]*\}\);/);
   const shown = new Function('state', 'SOCIETIES', 'isDone', 'newPending', shownSrc + '\nreturn SHOWN;');
   const list = () => shown(s, SOCIETIES, isDone, newPending);
 
